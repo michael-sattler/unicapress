@@ -1,0 +1,33 @@
+# Platform-specific configuration files
+/public/config/development.config.php
+/public/config/production.config.php
+/public/config/staging.config.php
+
+# Logs (inside public directory)
+/public/logs/*
+!/public/logs/.gitkeep
+!/public/logs/sessions/.gitkeep
+*.log
+/logs/
+
+# Docker volumes data
+db_data/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Local editor/agent settings
+.claude/
