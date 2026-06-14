@@ -17,7 +17,7 @@
                 <li class="nav-item">
                     <a class="<?php echo nav_link_class('/about-the-engine'); ?>" href="/about-the-engine">About the Engine</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item d-none">
                     <a class="<?php echo nav_link_class('/contact'); ?>" href="/contact">Contact</a>
                 </li>
                 <li class="nav-item ms-lg-2">

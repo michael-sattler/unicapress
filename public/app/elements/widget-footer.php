@@ -11,7 +11,7 @@
             </div>
             <div class="col-md-6 text-md-end mt-3 mt-md-0">
                 <a href="/about-the-engine" class="text-muted small me-3">About the Engine</a>
-                <a href="/contact" class="text-muted small me-3">Contact</a>
+                <a href="/contact" class="text-muted small me-3 d-none">Contact</a>
                 <span class="text-muted small">&copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars(SITE_NAME); ?></span>
             </div>
         </div>
