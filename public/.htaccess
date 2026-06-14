@@ -1,5 +1,6 @@
 # Enable Rewrite Engine
 RewriteEngine On
+DirectoryIndex index.php
 
 # Allow direct access to static files (assets, images, CSS, JS, etc.)
 RewriteCond %{REQUEST_FILENAME} -f

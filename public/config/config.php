@@ -7,8 +7,19 @@
  * require_once(__DIR__ . '/../config/config.php');
  */
 
-// Detect platform based on environment variable or default to development
-$platform = $_ENV['APP_ENV'] ?? 'development';
+// Detect platform: APP_ENV (Docker / .htaccess SetEnv) or auto-detect from available config files
+$platform = $_ENV['APP_ENV'] ?? $_SERVER['APP_ENV'] ?? null;
+
+if (!$platform) {
+    $has_development = file_exists(__DIR__ . '/development.config.php');
+    $has_production = file_exists(__DIR__ . '/production.config.php');
+
+    if ($has_production && !$has_development) {
+        $platform = 'production';
+    } else {
+        $platform = 'development';
+    }
+}
 
 // Load platform-specific configuration
 $platform_config_file = __DIR__ . '/' . $platform . '.config.php';
@@ -72,7 +83,7 @@ if (file_exists($platform_config_file)) {
             debug_log("Warning: Platform config file not found: {$platform_config_file}. Falling back to development.");
         }
     } else {
-        die("Error: No configuration file found. Please create development.config.php from template.config.php");
+        die("Error: No configuration file found. Copy public/config/template.config.php to development.config.php (local) or production.config.php (server).");
     }
 }
 
