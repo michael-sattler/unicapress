@@ -1,0 +1,277 @@
+:root {
+    --up-ink: #1A1714;
+    --up-paper: #F4EFE3;
+    --up-paper-dark: #EAE2D0;
+    --up-accent: #9E3328;
+    --up-accent-hover: #7c241b;
+    --up-muted: #5A5046;
+    --up-rule: #C9BB9B;
+    --up-border: rgba(26, 23, 20, 0.12);
+}
+
+body.site-body {
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    color: var(--up-ink);
+    background-color: var(--up-paper);
+    font-feature-settings: "onum", "liga", "kern";
+}
+
+h1, h2, h3, h4, .site-brand, .hero-title {
+    font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+/* Small caps for the wordmark and section eyebrows */
+.site-brand,
+.eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.eyebrow {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--up-accent);
+    margin-bottom: 0.5rem;
+}
+
+/* ---------------------------------------------------------------
+   Full-bleed "stripes" — background spans the viewport, content
+   is centered and capped via Bootstrap's .container
+   --------------------------------------------------------------- */
+.stripe {
+    padding: 4rem 0;
+}
+
+.stripe-paper {
+    background-color: var(--up-paper);
+}
+
+.stripe-deep {
+    background-color: var(--up-paper-dark);
+}
+
+.stripe-ink {
+    background-color: var(--up-ink);
+    color: var(--up-paper);
+}
+
+.stripe-ink .eyebrow {
+    color: var(--up-paper);
+    opacity: 0.7;
+}
+
+.stripe-rule-top {
+    border-top: 1px solid var(--up-rule);
+}
+
+.stripe-rule-bottom {
+    border-bottom: 1px solid var(--up-rule);
+}
+
+/* Hairline rule under a section head */
+.rule-accent {
+    display: block;
+    width: 3.5rem;
+    height: 1px;
+    margin: 0.85rem 0 1.25rem;
+    background-color: var(--up-accent);
+    border: none;
+}
+
+.rule-accent.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Printer's fleuron — a centered ornament dividing sections */
+.fleuron {
+    text-align: center;
+    color: var(--up-accent);
+    font-size: 1.1rem;
+    letter-spacing: 0.5em;
+    margin: 0;
+    line-height: 1;
+}
+
+/* The oxblood stamp device */
+.oxblood-stamp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 1.5px solid var(--up-accent);
+    border-radius: 50%;
+    color: var(--up-accent);
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+/* Hairline-divided columns instead of cards */
+.col-rule {
+    border-left: 1px solid var(--up-rule);
+    padding-left: 2rem;
+}
+
+@media (max-width: 767.98px) {
+    .col-rule {
+        border-left: none;
+        border-top: 1px solid var(--up-rule);
+        padding-left: 0;
+        padding-top: 2rem;
+        margin-top: 2rem;
+    }
+}
+
+/* The one permitted motion: a brief "ink sets" reveal on load */
+@keyframes ink-set {
+    from {
+        opacity: 0;
+        filter: blur(1px);
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+    }
+}
+
+.ink-set {
+    animation: ink-set 0.6s ease-out 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ink-set {
+        animation: none;
+    }
+}
+
+.site-navbar {
+    background: rgba(246, 241, 232, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--up-border);
+}
+
+.site-brand {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--up-ink);
+    letter-spacing: 0.02em;
+}
+
+.site-navbar .nav-link {
+    color: var(--up-muted);
+    font-weight: 600;
+}
+
+.site-navbar .nav-link:hover,
+.site-navbar .nav-link.active {
+    color: var(--up-ink);
+}
+.btn{padding: 0.5rem 1rem;border-radius: 0.5rem;}
+.btn-accent-outline {
+    --bs-btn-color: var(--up-accent);
+    --bs-btn-bg: transparent;
+    --bs-btn-border-color: var(--up-accent);
+    --bs-btn-hover-bg: var(--up-accent-hover);
+    --bs-btn-hover-border-color: var(--up-accent-hover);
+    --bs-btn-active-bg: var(--up-accent-hover);
+    --bs-btn-active-border-color: var(--up-accent-hover);
+}
+.btn-accent {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--up-accent);
+    --bs-btn-border-color: var(--up-accent);
+    --bs-btn-hover-bg: var(--up-accent-hover);
+    --bs-btn-hover-border-color: var(--up-accent-hover);
+    --bs-btn-active-bg: var(--up-accent-hover);
+    --bs-btn-active-border-color: var(--up-accent-hover);
+}
+.btn-accent:hover {
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+    background-color: var(--up-accent-hover);
+    color: #fff;
+    border-color: var(--up-accent-hover);
+}
+
+.hero-section {
+    padding: 4.5rem 0 3.5rem;
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
+    line-height: 1.1;
+    font-weight: 700;
+}
+
+.hero-lead {
+    font-size: 1.15rem;
+    color: var(--up-muted);
+    max-width: 38rem;
+}
+
+.feature-card {
+    background: var(--up-paper);
+    border: 1px solid var(--up-border);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    height: 100%;
+}
+
+.feature-card .fa-solid {
+    color: var(--up-accent);
+    font-size: 1.35rem;
+}
+
+.placeholder-banner {
+    background: var(--up-paper-dark);
+    border: 1px dashed var(--up-border);
+    border-radius: 0.75rem;
+    padding: 2rem;
+}
+
+.site-footer {
+    background: var(--up-paper-dark);
+    border-top: 1px solid var(--up-border);
+}
+
+.site-footer-brand {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.page-header {
+    padding: 3rem 0 2rem;
+    border-bottom: 1px solid var(--up-border);
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-weight: 700;
+}
+
+.site-main .container-narrow {
+    max-width: 42rem;
+}
+
+.badge-placeholder {
+    background: var(--up-paper-dark);
+    color: var(--up-muted);
+    border: 1px solid var(--up-border);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+}

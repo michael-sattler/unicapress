@@ -2,7 +2,6 @@
 
 *SCOPE FOR SETTING UP A CORE SAAS APPLICATION FRAMEWORK WITHOUT SPECIFIC BUSINESS LOGIC*
 [ ] Create docker container and test (See /docs/specs-platforms.md)
-[ ] Create new git repo
 [ ] Create core database entities
   - users
   - adminusers
@@ -12,6 +11,7 @@
   - eventlogs
   - eventlogtypes
   - supportmessages
+[ ] Create new git repo
 [ ] Create config system
 [ ] Create placeholder files for major admin interfaces, includes, and files
 [ ] Test admin functionality

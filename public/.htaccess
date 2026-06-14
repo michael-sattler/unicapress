@@ -1,0 +1,18 @@
+# Enable Rewrite Engine
+RewriteEngine On
+
+# Allow direct access to static files (assets, images, CSS, JS, etc.)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Allow direct access to directories (unless it's a route)
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_URI} !^/(app|api|config|logs)
+RewriteRule ^ - [L]
+
+# Route API requests to /api/index.php
+RewriteCond %{REQUEST_URI} ^/api
+RewriteRule ^api/(.*)$ api/index.php [L,QSA]
+
+# Route all other requests through main router
+RewriteRule ^(.*)$ index.php [L,QSA]

@@ -34,7 +34,7 @@ Marketing site + staff ops console     Worldbuilding tool + Telling engine + rea
 - The **public "About the Engine" colophon page** (PRD E2.1) — the out-of-world disclosure page. Its body copy lives here in Content Library; if it needs to display a live world-package version number, that single value is fetched from the App's public API at render time (see §4). The page itself is Shell-owned.
 - Contact/inquiry form → writes to the support inbox (§2.5)
 - Newsletter / mailing-list signup capture (optional, see §8 Phase S6)
-- "Visit the Archive" CTA linking out to the App's domain
+- "Visit the Grand Archive" CTA linking out to the App's domain
 - SEO basics, Google Analytics via Google Tag Manager (per [standards-frontend.md](./standards-frontend.md))
 
 ### 2.2 Staff admin console
@@ -159,6 +159,10 @@ A future extraction should parameterize **branding** (site name, colors, fonts, 
 ## 8. Workplan (Phase S — Shell)
 
 This phase precedes and runs independently of the App's Phase 0 (World content / Engine). It can start immediately.
+
+[x] Create docker container and test (See /docs/specs-platforms.md)
+[x] Create core database entities
+
 
 ### S0 — Fix the inherited template
 The current repo is a copy of a prior project ("unbox") with broken paths and leftover naming. Before any new code:

@@ -20,6 +20,12 @@ define('DB_PORT', 3306);
 // Application URLs
 define('APP_URL', 'http://localhost:8080');
 define('APP_API_URL', 'http://localhost:8080/api');
+define('APP_ARCHIVE_URL', 'https://archive.unicapress.com'); // The App — reader experience (outbound link only)
+define('APP_ADMIN_URL', APP_URL . '/admin');
+
+// Site identity (marketing shell)
+define('SITE_NAME', 'Unica Press');
+define('SITE_TAGLINE', 'Unique stories, engine-told. Fixed upon reading.');
 
 // Paths - IMPORTANT: All paths must be within PUBLIC_ROOT for shared hosting compatibility
 // LOG_PATH MUST always be within PUBLIC_ROOT - never route logs outside the application
