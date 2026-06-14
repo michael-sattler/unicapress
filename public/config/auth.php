@@ -22,13 +22,15 @@ define('PASSWORD_COST', 12);
 define('MAX_LOGIN_ATTEMPTS', 5);
 define('LOGIN_LOCKOUT_DURATION', 900); // 15 minutes in seconds
 
-// Session cookie settings (for development) - must be set before session_start()
+// Session cookie settings — must be set before session_start()
 if (defined('APP_URL') && session_status() === PHP_SESSION_NONE) {
     $domain = parse_url(APP_URL, PHP_URL_HOST);
     $secure = (parse_url(APP_URL, PHP_URL_SCHEME) === 'https');
-    
-    ini_set('session.cookie_domain', $domain);
-    ini_set('session.cookie_secure', $secure ? '1' : '0');
-    ini_set('session.cookie_httponly', '1');
-    ini_set('session.cookie_samesite', 'Lax');
+
+    @ini_set('session.cookie_httponly', '1');
+    @ini_set('session.cookie_secure', $secure ? '1' : '0');
+    if (PHP_VERSION_ID >= 70300) {
+        @ini_set('session.cookie_samesite', 'Lax');
+    }
+    // Leave cookie_domain unset — cPanel/shared hosts often break when forced to apex domain
 }
