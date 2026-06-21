@@ -1,6 +1,30 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/includes/functions-universal.php';
+require_once __DIR__ . '/includes/functions-waitlist.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['waitlist_submit'])) {
+    $result = add_waitlist_signup(
+        $_POST['waitlist_name'] ?? '',
+        $_POST['waitlist_email'] ?? '',
+        'home'
+    );
+
+    if ($result['success']) {
+        $_SESSION['success_message'] = $result['message'];
+    } else {
+        $_SESSION['error_message'] = $result['message'];
+        $_SESSION['waitlist_form_name'] = trim((string) ($_POST['waitlist_name'] ?? ''));
+        $_SESSION['waitlist_form_email'] = trim((string) ($_POST['waitlist_email'] ?? ''));
+    }
+
+    header('Location: /#waitlist');
+    exit;
+}
+
+$waitlist_name = $_SESSION['waitlist_form_name'] ?? '';
+$waitlist_email = $_SESSION['waitlist_form_email'] ?? '';
+unset($_SESSION['waitlist_form_name'], $_SESSION['waitlist_form_email']);
 
 $pagetitle = SITE_NAME;
 $pagdescription = SITE_TAGLINE;
@@ -195,6 +219,70 @@ ob_start();
     <div class="container py-4">
         <p class="lead mb-1">Every copy the only copy.</p>
         <p class="small mb-0" style="opacity: 0.65;">&ndash; Unica Press</p>
+    </div>
+</section>
+<!-- ============================== WAITLIST ============================== -->
+<section class="stripe stripe-paper text-center" id="waitlist">
+    <div class="container py-3">
+        <p class="fleuron mb-4">&#10072; &#10070; &#10072;</p>
+        <span class="eyebrow">Learn more</span>
+        <h2 class="mb-3">Get updates when we're ready for testing</h2>
+        <p class="mx-auto mb-4" style="max-width: 38rem;">
+            If you're a worldbuilder interested in the next generation of storytelling, join the waitlist
+            and we'll reach out when early testing opens.
+        </p>
+
+        <button
+            type="button"
+            class="btn btn-accent-outline waitlist-toggle"
+            data-bs-toggle="collapse"
+            data-bs-target="#waitlist-form"
+            aria-expanded="false"
+            aria-controls="waitlist-form"
+        >
+            Sign up for updates <i class="fa-solid fa-envelope ms-1"></i>
+        </button>
+
+        <div class="collapse waitlist-panel mx-auto mt-4 col-lg-6 offset-lg-3" id="waitlist-form">
+            <form method="post" action="/#waitlist" class="waitlist-form text-start">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="waitlist_name" class="form-label">Name</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="waitlist_name"
+                            name="waitlist_name"
+                            value="<?php echo htmlspecialchars($waitlist_name); ?>"
+                            maxlength="255"
+                            autocomplete="name"
+                            required
+                        >
+                    </div>
+                    <div class="col-md-6">
+                        <label for="waitlist_email" class="form-label">Email</label>
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="waitlist_email"
+                            name="waitlist_email"
+                            value="<?php echo htmlspecialchars($waitlist_email); ?>"
+                            maxlength="255"
+                            autocomplete="email"
+                            required
+                        >
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" name="waitlist_submit" value="1" class="btn btn-accent w-100">
+                            Join the waitlist <i class="fa-solid fa-pen-nib ms-1"></i>
+                        </button>
+                        <p class="waitlist-form-note mb-0 mt-3 text-center">
+                            One note when testing opens. No spam, no resale — just an invitation.
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </section>
 

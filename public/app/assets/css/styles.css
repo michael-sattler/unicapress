@@ -275,3 +275,43 @@ h1, h2, h3, h4, .site-brand, .hero-title {
     text-transform: uppercase;
     font-size: 0.7rem;
 }
+
+/* Waitlist signup panel */
+.waitlist-panel {
+    max-width: 36rem;
+}
+
+.waitlist-form {
+    background: #fff;
+    border: 1px solid var(--up-rule);
+    border-top: 3px solid var(--up-accent);
+    border-radius: 0.5rem;
+    padding: 1.75rem;
+    box-shadow: 0 0.35rem 1.25rem rgba(26, 23, 20, 0.06);
+}
+
+.waitlist-form .form-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--up-muted);
+    margin-bottom: 0.35rem;
+}
+
+.waitlist-form .form-control {
+    border-color: var(--up-rule);
+    background-color: var(--up-paper);
+    padding: 0.65rem 0.85rem;
+}
+
+.waitlist-form .form-control:focus {
+    border-color: var(--up-accent);
+    box-shadow: 0 0 0 0.2rem rgba(158, 51, 40, 0.12);
+    background-color: #fff;
+}
+
+.waitlist-form-note {
+    font-size: 0.9rem;
+    color: var(--up-muted);
+}

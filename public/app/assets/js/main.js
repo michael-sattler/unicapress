@@ -10,4 +10,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }, 6000);
     });
+
+    var waitlistForm = document.getElementById('waitlist-form');
+    if (waitlistForm && window.location.hash === '#waitlist') {
+        if (typeof bootstrap !== 'undefined' && bootstrap.Collapse) {
+            bootstrap.Collapse.getOrCreateInstance(waitlistForm, { toggle: false }).show();
+        }
+        waitlistForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 });

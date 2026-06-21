@@ -34,3 +34,7 @@ if (defined('APP_URL') && session_status() === PHP_SESSION_NONE) {
     }
     // Leave cookie_domain unset — cPanel/shared hosts often break when forced to apex domain
 }
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
