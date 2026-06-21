@@ -14,4 +14,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQ10OrQ/VJwY4r6D7Nr71kKb2+1bP+r1R2b+1GUq0/uc7VAmCEF0qpdHAlcZQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link rel="stylesheet" href="<?php echo asset_url('css/styles.css'); ?>" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/app/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/app/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/app/assets/images/favicon-16x16.png">
+    <link rel="manifest" href="/app/assets/images/site.webmanifest">
+
 </head>

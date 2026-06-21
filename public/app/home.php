@@ -11,12 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['waitlist_submit'])) {
     );
 
     if ($result['success']) {
-        $_SESSION['success_message'] = $result['message'];
-    } else {
-        $_SESSION['error_message'] = $result['message'];
-        $_SESSION['waitlist_form_name'] = trim((string) ($_POST['waitlist_name'] ?? ''));
-        $_SESSION['waitlist_form_email'] = trim((string) ($_POST['waitlist_email'] ?? ''));
+        $_SESSION['waitlist_toast'] = $result['message'];
+        header('Location: /');
+        exit;
     }
+
+    $_SESSION['error_message'] = $result['message'];
+    $_SESSION['waitlist_form_name'] = trim((string) ($_POST['waitlist_name'] ?? ''));
+    $_SESSION['waitlist_form_email'] = trim((string) ($_POST['waitlist_email'] ?? ''));
 
     header('Location: /#waitlist');
     exit;
