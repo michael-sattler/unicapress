@@ -58,18 +58,9 @@ ob_start();
 header('Content-Type: application/json');
 
 // Include configuration
-require_once __DIR__ . "/config-api/config.php";
+require_once __DIR__ . "/config-api.php";
 
-// Start session to access session variables globally for all API endpoints
-if (session_status() === PHP_SESSION_NONE) {
-    debug_log("API index: Starting session with domain: " . ini_get('session.cookie_domain'));
-    debug_log("API index: Session path: " . ini_get('session.cookie_path'));
-    debug_log("API index: Session secure: " . ini_get('session.cookie_secure'));
-    session_start();
-}
-
-// Process session sync for all requests BEFORE routing
-processSessionSync();
+// Session is already started by config.php (loaded via config-api.php -> auth.php)
 
 // Parse the request URI
 $request_uri = $_SERVER['REQUEST_URI'];
@@ -93,7 +84,7 @@ $response = [
 $status_code = 404;
 
 // Get routes from configuration
-$routes = require __DIR__ . "/config-api/routes.php";
+$routes = require __DIR__ . "/routes.php";
 
 // Get HTTP method
 $method = $_SERVER['REQUEST_METHOD'];

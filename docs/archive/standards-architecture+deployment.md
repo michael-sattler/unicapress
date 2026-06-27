@@ -8,7 +8,7 @@
 - The only permitted coupling between the two: the Shell's public colophon page may read one value (world package version) from a public App endpoint, and must degrade gracefully if unavailable. No shared database, session, or auth.
 
 *STACK*
-- See /docs/specs-platforms.md
+- See /docker/README.md (local dev stack) and §6 of /docs/scope-marketing-shell.md (production target)
 
 *ADMIN*
 - In addition to user-facing tools, we have an admin area with tools only staffers can use

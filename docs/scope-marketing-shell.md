@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `mailinglist_subscribers` (
 
 ## 6. Tech stack & deployment
 
-Per [specs-platforms.md](./specs-platforms.md) and [standards-architecture+deployment.md](./standards-architecture+deployment.md) — unchanged for the Shell:
+Per [docker/README.md](../docker/README.md) and [standards-architecture+deployment.md](./standards-architecture+deployment.md) — unchanged for the Shell:
 
 - PHP 8.2, mysqli, no framework
 - Bootstrap + Sass, light jQuery/vanilla JS, GA via GTM
@@ -160,62 +160,62 @@ A future extraction should parameterize **branding** (site name, colors, fonts, 
 
 This phase precedes and runs independently of the App's Phase 0 (World content / Engine). It can start immediately.
 
-[x] Create docker container and test (See /docs/specs-platforms.md)
+[x] Create docker container and test (See /docker/README.md)
 [x] Create core database entities
 
 
-### S0 — Fix the inherited template
-The current repo is a copy of a prior project ("unbox") with broken paths and leftover naming. Before any new code:
+### S0 — Fix the inherited template ✅
+The current repo is a copy of a prior project ("unbox") with broken paths and leftover naming.
 
 | # | Task |
 |---|---|
-| S0.1 | Fix path mismatches: `.admintemplate.php`, `adminlogin.php`, `admin/index.php`, `api-tester.php` reference non-existent `/config-app/config.php` and undefined `APP_PUBLIC_PATH` — point at `/public/config/config.php` per standards |
-| S0.2 | Fix `public/api/index.php` and `diagnostic-apihealth.php`: replace `/config-api/config.php` and `/config-api/routes.php` references with the actual flat files (`config-api.php`, `routes.php`) |
-| S0.3 | Fix `adminroutes.php` syntax error (missing comma, inconsistent route value formats) |
-| S0.4 | Rename leftover `unbox`/`unbox_user`/`unbox_password`/`unbox_session` → `unicapress` equivalents in config templates |
-| S0.5 | Remove tracked-but-empty `production.config.php`; confirm `.gitignore` covers platform configs |
-| S0.6 | Build out `public/app/index.php` / `routes.php` front controller for the public site (currently empty) |
+| [x] S0.1 | Fix path mismatches: `.admintemplate.php`, `adminlogin.php`, `admin/index.php`, `api-tester.php` reference non-existent `/config-app/config.php` and undefined `APP_PUBLIC_PATH` — point at `/public/config/config.php` per standards |
+| [x] S0.2 | Fix `public/api/index.php`, `config-api.php`, `diagnostic-apihealth.php`: replace `/config-api/config.php` and `/config-api/routes.php` references with the actual flat files (`config-api.php`, `routes.php`) |
+| [x] S0.3 | Fix `adminroutes.php` syntax error (missing comma, inconsistent route value formats) |
+| [x] S0.4 | Rename leftover `amanuensis`/`APP_BASE_URL` branding leftovers in admin nav (no `unbox` references were found — already cleaned from config templates) |
+| [x] S0.5 | `production.config.php` confirmed untracked; `.gitignore` already covers all platform configs |
+| [x] S0.6 | `public/index.php` + `app/routes.php` front controller already worked; removed the dead, empty, unreferenced `public/app/index.php`. Also fixed: 404 fallback never loaded `functions-universal.php` (fatal on every 404), a stray syntax error in `diagnostic-apihealth.php`, broken JS in `diagnostic-cors.php`, a short tag in `diagnostic-logging.php` |
 
-### S1 — Core schema
+### S1 — Core schema ✅
 | # | Task |
 |---|---|
-| S1.1 | Write SQL migration for `adminusers`, `content_library`, `email_library`, `eventlogs`, `eventlogtypes`, `featureflags`, `adminuser_featureflags`, `supportmessages`, `images`, `imagegallery` into `docker/mysql/init/` |
-| S1.2 | Seed at least one `adminuser` for local dev |
+| [x] S1.1 | SQL migration for `adminusers`, `content_library`, `email_library`, `eventlogs`, `eventlogtypes`, `featureflags`, `adminuser_featureflags`, `supportmessages`, `images`, `imagegallery` in `docker/mysql/init/02-shell-schema.sql` |
+| [x] S1.2 | Seeded `admin@unicapress.com` / `admin123` (dev only) + base `eventlogtypes` rows in `docker/mysql/init/03-shell-seed.sql` |
 
-### S2 — Admin auth & shell
+### S2 — Admin auth & shell ✅
 | # | Task |
 |---|---|
-| S2.1 | `adminlogin.php` working against `adminusers` |
-| S2.2 | `adminonly()` in `functions-universal.php` |
-| S2.3 | Admin layout/nav/alert elements wired and rendering |
+| [x] S2.1 | `adminlogin.php` working against `adminusers` (login attempt limits + lockout, event logging) |
+| [x] S2.2 | `adminonly()` / `validateadminuser()` — placed in new `functions-admin.php` (single-purpose, per standards §Functions) rather than `functions-universal.php`; `log_event()` added to `functions-universal.php` |
+| [x] S2.3 | Admin layout/nav/alert elements wired and rendering (built out the stub `admin-pagehead.php`) |
 
-### S3 — Content & Email Libraries
+### S3 — Content & Email Libraries ✅
 | # | Task |
 |---|---|
-| S3.1 | `content_library` CRUD admin tool |
-| S3.2 | `displayContentLibrary()` with `%%VARIABLE%%` interpolation |
-| S3.3 | `email_library` CRUD admin tool |
-| S3.4 | `sendEmailFromLibrary()` |
+| [x] S3.1 | `content_library` CRUD admin tool — `public/app/admin/content-library.php` |
+| [x] S3.2 | `displayContentLibrary()` with `%%VARIABLE%%` interpolation — `functions-universal.php` |
+| [x] S3.3 | `email_library` CRUD admin tool (+ test-render) — `public/app/admin/email-library.php` |
+| [x] S3.4 | `sendEmailFromLibrary()` in new `functions-email.php` — renders + logs to `event_logs`; provider (Resend) intentionally **not** wired yet, by design (see TODO in file) |
 
 ### S4 — Event logging & feature flags
 | # | Task |
 |---|---|
-| S4.1 | Event logging helper + wire into admin login, content edits |
-| S4.2 | `featureflagRequired()` / `hasFeatureFlag()` against `adminuser_featureflags` |
+| [x] S4.1 | Event logging helper + wired in — `log_event()` covers admin login/logout/lockout, content/email library edits, admin user CRUD, event type CRUD, waitlist CRUD |
+| S4.2 | **Deferred.** `featureflagRequired()` / `hasFeatureFlag()` against `adminuser_featureflags`. Table exists (S1); no admin tool or runtime gating built yet — nothing currently depends on this |
 
 ### S5 — Support inbox & marketing site
 | # | Task |
 |---|---|
-| S5.1 | Public contact form → `supportmessages` |
-| S5.2 | Admin inbox view for inquiries (new/responded) |
-| S5.3 | Marketing home page + about + colophon stub (static copy, Content Library-driven) |
-| S5.4 | Image/asset library admin tool; gazetteer preview images for marketing |
+| S5.1 | **Deferred.** Public contact form → `supportmessages`. `contact.php` is still a static placeholder page, not wired to the table |
+| S5.2 | **Deferred.** Admin inbox view for inquiries (new/responded) — blocked on S5.1 |
+| S5.3 | **Partially done.** Home/about pages are live with real copy; colophon page is live with full disclosure copy — but both are hardcoded PHP, not yet pulled through `displayContentLibrary()` as originally scoped |
+| S5.4 | **Deferred.** Image/asset library admin tool; gazetteer preview images for marketing. `images`/`imagegallery` tables exist (S1); no admin UI yet |
 
-### S6 — Optional / fast-follow
+### S6 — Optional / fast-follow (all deferred)
 | # | Task |
 |---|---|
-| S6.1 | Mailing-list signup capture (`mailinglist_subscribers`) |
-| S6.2 | Colophon page's live world-package-version fetch from App public API (graceful no-op if unavailable) |
+| S6.1 | Mailing-list signup capture (`mailinglist_subscribers`) — note the `waitlist` table already serves this purpose for now; revisit whether a separate table is still needed |
+| S6.2 | Colophon page's live world-package-version fetch from App public API (graceful no-op if unavailable) — no App endpoint exists yet to fetch from |
 | S6.3 | Diagnostics hardening (real `checkOrigin()`/`checkAuthentication()` in `config-api.php`, currently stubbed `return true`) |
 
 ### Exit gate

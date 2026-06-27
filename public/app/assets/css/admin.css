@@ -1,0 +1,145 @@
+/* Admin console chrome — uses the brand tokens defined in styles.css (--up-*).
+   These classes were referenced by the inherited admin templates but never
+   actually defined anywhere; this file is their home. */
+
+.bkgd-primary {
+    background-color: var(--up-ink);
+}
+
+.bkgd-lighter {
+    background-color: var(--up-paper);
+}
+
+.bkgd-lightest {
+    background-color: #fff;
+}
+
+.text-lightest {
+    color: var(--up-paper) !important;
+}
+
+.text-admin {
+    color: var(--up-accent);
+}
+
+.text-typewritten {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 700;
+}
+
+.text-xl { font-size: 1.25rem; }
+.text-lg { font-size: 1.1rem; }
+.text-xs { font-size: 0.72rem; letter-spacing: 0.04em; }
+
+/* Top bar */
+.navtop {
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+.navtop-right-user {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.btn-tiny {
+    padding: 0.2rem 0.6rem;
+    font-size: 0.78rem;
+}
+
+.btn-light-outline {
+    color: var(--up-paper);
+    border: 1px solid rgba(244, 239, 227, 0.5);
+    background: transparent;
+}
+
+.btn-light-outline:hover {
+    background: rgba(244, 239, 227, 0.12);
+    color: var(--up-paper);
+}
+
+.btn-primary-outline {
+    color: var(--up-ink);
+    border: 1px solid var(--up-rule);
+    background: transparent;
+}
+
+.btn-primary-outline:hover {
+    background: var(--up-paper-dark);
+}
+
+/* Left nav */
+.leftnav {
+    padding: 1.25rem 1rem;
+    position: relative;
+}
+
+.leftnav h5 {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--up-muted);
+}
+
+.leftnav ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1.5rem;
+}
+
+.leftnav ul li {
+    padding: 0.4rem 0;
+}
+
+.leftnav a {
+    color: var(--up-ink);
+    text-decoration: none;
+}
+
+.leftnav a:hover {
+    color: var(--up-accent);
+}
+
+/* Bootstrap 5 dropped .border-right/.border-left; the inherited templates still use them */
+.border-right {
+    border-right: 1px solid var(--up-border);
+}
+
+/* Session debug slider */
+.sessionslider {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 360px;
+    max-width: 90vw;
+    background: #fff;
+    border-left: 1px solid var(--up-border);
+    box-shadow: -0.5rem 0 1.5rem rgba(0, 0, 0, 0.12);
+    z-index: 2000;
+    padding: 2rem 1.25rem 1.25rem;
+    overflow-y: auto;
+    transition: transform 0.25s ease;
+}
+
+.sessionslider.collapsed {
+    transform: translateX(100%);
+}
+
+.sessionslider.expanded {
+    transform: translateX(0);
+}
+
+.sessionslider pre {
+    background: var(--up-paper);
+    border: 1px solid var(--up-border);
+    border-radius: 0.35rem;
+    padding: 0.75rem;
+    font-size: 0.8rem;
+}
+
+/* Admin result alert */
+.adminalert {
+    border-radius: 0.4rem;
+    box-shadow: 0 0.35rem 1.25rem rgba(0, 0, 0, 0.15);
+}

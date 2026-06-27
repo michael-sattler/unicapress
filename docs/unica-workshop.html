@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Unica Workshop — The Steamlands</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #111110;
+    --surface-1: #1a1917;
+    --surface-2: #222120;
+    --surface-3: #2c2b29;
+    --border:    rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.15);
+    --text-primary:   #e8e4dc;
+    --text-secondary: #9e9a92;
+    --text-muted:     #5c5955;
+    --accent:    #c8b88a;
+    --accent-dim: rgba(200,184,138,0.12);
+    --dot-color: rgba(255,255,255,0.1);
+    --radius: 8px;
+    --nav-width: 208px;
+    --console-width: 248px;
+    --font-serif: 'IM Fell English', Georgia, serif;
+    --font-body:  'EB Garamond', Georgia, serif;
+    --font-sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    overflow: hidden;
+  }
+
+  /* ── LAYOUT ── */
+  .app { display: flex; height: 100vh; }
+
+  /* ── LEFT NAV ── */
+  .nav {
+    width: var(--nav-width);
+    min-width: var(--nav-width);
+    background: var(--surface-1);
+    border-right: 0.5px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .nav-logo {
+    padding: 18px 16px 14px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .nav-logo-world {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .nav-logo-sub {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .nav-section {
+    padding: 16px 12px 4px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    margin: 1px 6px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+    user-select: none;
+  }
+  .nav-item:hover { background: var(--surface-2); color: var(--text-primary); }
+  .nav-item.active { background: var(--surface-3); color: var(--text-primary); }
+  .nav-item .ti { font-size: 15px; color: var(--text-muted); flex-shrink: 0; }
+  .nav-item.active .ti { color: var(--accent); }
+
+  .nav-count {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .nav-divider { height: 0.5px; background: var(--border); margin: 8px 12px; }
+
+  .nav-bottom {
+    margin-top: auto;
+    padding: 12px;
+    border-top: 0.5px solid var(--border);
+  }
+  .nav-publish-btn {
+    width: 100%;
+    padding: 8px 0;
+    font-family: var(--font-serif);
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    color: var(--accent);
+    transition: background 0.12s;
+  }
+  .nav-publish-btn:hover { background: var(--surface-3); }
+
+  /* ── MAIN ── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  .topbar {
+    height: 44px;
+    min-height: 44px;
+    border-bottom: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    gap: 10px;
+    background: var(--surface-1);
+  }
+  .topbar-title {
+    font-family: var(--font-serif);
+    font-size: 14px;
+    color: var(--text-primary);
+    flex: 1;
+  }
+  .topbar-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .topbar-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 5px 10px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: transparent;
+    transition: border-color 0.12s, color 0.12s;
+    font-family: var(--font-sans);
+  }
+  .topbar-btn:hover { border-color: var(--border-strong); color: var(--text-primary); }
+  .topbar-btn.primary {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .topbar-btn.primary:hover { background: var(--accent-dim); }
+
+  /* ── CANVAS ── */
+  .canvas-wrap {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Dot grid background */
+  .canvas-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+
+  /* ── GETTING STARTED OVERLAY ── */
+  .getting-started {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    padding: 40px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    transition: opacity 0.3s;
+    z-index: 10;
+  }
+  .getting-started.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .gs-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .gs-heading {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    line-height: 1.2;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .gs-sub {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    max-width: 480px;
+    margin-bottom: 32px;
+  }
+
+  .gs-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 520px;
+    margin-bottom: 36px;
+  }
+  .gs-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--surface-1);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.12s;
+  }
+  .gs-step:hover { border-color: var(--border-strong); }
+  .gs-step-num {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    color: var(--text-muted);
+    min-width: 18px;
+    padding-top: 1px;
+  }
+  .gs-step-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+  .gs-step-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .gs-step-cta {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .gs-entity-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .gs-entity-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+    max-width: 640px;
+  }
+  .gs-entity-card {
+    padding: 12px 10px;
+    background: var(--surface-1);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    transition: border-color 0.12s, background 0.12s;
+  }
+  .gs-entity-card:hover { border-color: var(--border-strong); background: var(--surface-2); }
+  .gs-entity-card .ti { font-size: 16px; color: var(--text-muted); }
+  .gs-entity-card-label {
+    font-family: var(--font-serif);
+    font-size: 12px;
+    color: var(--text-primary);
+  }
+  .gs-entity-card-hint {
+    font-size: 10px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* ── CARD CANVAS (empty state after dismiss) ── */
+  .card-canvas {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .canvas-empty-hint {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s 0.1s;
+  }
+  .canvas-empty-hint.visible { opacity: 1; }
+  .canvas-empty-hint-text {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+  .canvas-empty-hint-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── DRAGGABLE CARDS ── */
+  .entity-card {
+    position: absolute;
+    width: 192px;
+    background: var(--surface-1);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    cursor: grab;
+    user-select: none;
+    transition: border-color 0.12s, box-shadow 0.12s;
+    overflow: hidden;
+  }
+  .entity-card:hover { border-color: var(--border-strong); }
+  .entity-card.dragging {
+    cursor: grabbing;
+    border-color: var(--accent);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    z-index: 100;
+  }
+
+  .entity-card-type {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px 6px;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .entity-card-type .ti { font-size: 12px; }
+
+  .entity-card-body { padding: 10px 12px 12px; }
+  .entity-card-name {
+    font-family: var(--font-serif);
+    font-size: 14px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .entity-card-meta {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .entity-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px 8px;
+    border-top: 0.5px solid var(--border);
+  }
+  .entity-card-canon {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    letter-spacing: 0.04em;
+  }
+  .entity-card-canon.canon {
+    background: rgba(200,184,138,0.12);
+    color: var(--accent);
+    border: 0.5px solid rgba(200,184,138,0.25);
+  }
+  .entity-card-canon.draft {
+    background: var(--surface-2);
+    color: var(--text-muted);
+    border: 0.5px solid var(--border);
+  }
+  .entity-card-edit {
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 4px;
+    transition: color 0.1s;
+  }
+  .entity-card-edit:hover { color: var(--text-primary); }
+
+  /* ── RIGHT CONSOLE ── */
+  .console {
+    width: var(--console-width);
+    min-width: var(--console-width);
+    background: var(--surface-1);
+    border-left: 0.5px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .console-header {
+    height: 44px;
+    min-height: 44px;
+    padding: 0 14px;
+    border-bottom: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-serif);
+    font-size: 14px;
+    color: var(--text-primary);
+  }
+  .console-header-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+
+  .console-messages {
+    flex: 1;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+  }
+
+  .console-msg {
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    padding: 10px 12px;
+    background: var(--surface-2);
+    border-radius: 8px;
+    border: 0.5px solid var(--border);
+  }
+  .console-msg.user {
+    background: var(--surface-3);
+    color: var(--text-primary);
+    margin-left: 12px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+  }
+
+  .console-chips {
+    padding: 8px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-top: 0.5px solid var(--border);
+  }
+  .console-chip {
+    font-size: 11px;
+    padding: 6px 10px;
+    border: 0.5px solid var(--border);
+    border-radius: 20px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    background: var(--surface-2);
+    text-align: left;
+    font-family: var(--font-sans);
+    transition: border-color 0.12s, color 0.12s;
+    line-height: 1.4;
+  }
+  .console-chip:hover { border-color: var(--border-strong); color: var(--text-primary); }
+
+  .console-input-row {
+    padding: 10px 14px;
+    border-top: 0.5px solid var(--border);
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .console-input {
+    flex: 1;
+    font-size: 12px;
+    padding: 7px 10px;
+    background: var(--surface-2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    outline: none;
+    transition: border-color 0.12s;
+  }
+  .console-input::placeholder { color: var(--text-muted); }
+  .console-input:focus { border-color: var(--border-strong); }
+  .console-send {
+    padding: 7px 10px;
+    background: var(--surface-2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 14px;
+    transition: border-color 0.12s, color 0.12s;
+  }
+  .console-send:hover { border-color: var(--border-strong); color: var(--text-primary); }
+
+  /* ── CONTEXT MENU ── */
+  .ctx-menu {
+    position: fixed;
+    background: var(--surface-2);
+    border: 0.5px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 4px;
+    z-index: 1000;
+    min-width: 160px;
+    display: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .ctx-menu.visible { display: block; }
+  .ctx-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+  }
+  .ctx-item:hover { background: var(--surface-3); color: var(--text-primary); }
+  .ctx-item .ti { font-size: 14px; color: var(--text-muted); }
+  .ctx-divider { height: 0.5px; background: var(--border); margin: 3px 0; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── LEFT NAV ── -->
+  <nav class="nav">
+    <div class="nav-logo">
+      <span class="nav-logo-world">The Steamlands</span>
+      <span class="nav-logo-sub">Workshop</span>
+    </div>
+
+    <div class="nav-section">World</div>
+    <div class="nav-item active" onclick="setActive(this)">
+      <i class="ti ti-layout-dashboard"></i> Dashboard
+    </div>
+    <div class="nav-item" onclick="setActive(this)">
+      <i class="ti ti-package"></i> World package
+    </div>
+
+    <div class="nav-divider"></div>
+    <div class="nav-section">Entities</div>
+
+    <div class="nav-item" onclick="setActive(this)" data-type="location">
+      <i class="ti ti-map-pin"></i> Locations
+      <span class="nav-count" id="count-location">0</span>
+    </div>
+    <div class="nav-item" onclick="setActive(this)" data-type="character">
+      <i class="ti ti-users"></i> Characters
+      <span class="nav-count" id="count-character">0</span>
+    </div>
+    <div class="nav-item" onclick="setActive(this)" data-type="object">
+      <i class="ti ti-tool"></i> Objects
+      <span class="nav-count" id="count-object">0</span>
+    </div>
+    <div class="nav-item" onclick="setActive(this)" data-type="event">
+      <i class="ti ti-timeline"></i> Events
+      <span class="nav-count" id="count-event">0</span>
+    </div>
+    <div class="nav-item" onclick="setActive(this)" data-type="org">
+      <i class="ti ti-hierarchy"></i> Organizations
+      <span class="nav-count" id="count-org">0</span>
+    </div>
+    <div class="nav-item" onclick="setActive(this)" data-type="theme">
+      <i class="ti ti-tag"></i> Themes
+      <span class="nav-count" id="count-theme">0</span>
+    </div>
+
+    <div class="nav-divider"></div>
+    <div class="nav-section">Stories</div>
+    <div class="nav-item" onclick="setActive(this)" data-type="skeleton">
+      <i class="ti ti-book"></i> Skeletons
+      <span class="nav-count" id="count-skeleton">0</span>
+    </div>
+
+    <div class="nav-bottom">
+      <button class="nav-publish-btn">Publish package ↗</button>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+    <div class="topbar">
+      <span class="topbar-title" id="topbar-title">Getting started</span>
+      <span class="topbar-meta">v0 · no published package</span>
+      <button class="topbar-btn" onclick="toggleGettingStarted()">
+        <i class="ti ti-layout-grid"></i> <span id="canvas-toggle-label">Show canvas</span>
+      </button>
+      <button class="topbar-btn primary" onclick="openAddCard()">
+        <i class="ti ti-plus"></i> New entity
+      </button>
+    </div>
+
+    <div class="canvas-wrap" id="canvas-wrap" oncontextmenu="showCtxMenu(event)">
+      <!-- GETTING STARTED -->
+      <div class="getting-started" id="getting-started">
+        <div class="gs-eyebrow">The case is empty</div>
+        <div class="gs-heading">Begin with a city.</div>
+        <div class="gs-sub">Every telling needs somewhere to happen. Add your first location, then populate it with characters, objects, and events. The engine assembles the rest.</div>
+
+        <div class="gs-steps">
+          <div class="gs-step" onclick="addSampleCards()">
+            <div class="gs-step-num">I</div>
+            <div>
+              <div class="gs-step-title">Add at least 4 locations</div>
+              <div class="gs-step-desc">Each city becomes an available destination on the request slip. Minimum 4 for launch.</div>
+              <div class="gs-step-cta"><i class="ti ti-arrow-right" style="font-size:11px"></i> Create first location</div>
+            </div>
+          </div>
+          <div class="gs-step">
+            <div class="gs-step-num">II</div>
+            <div>
+              <div class="gs-step-title">Author 8 skeletons</div>
+              <div class="gs-step-desc">Story shapes spanning at least 3 registers. The engine never invents plot — only you do.</div>
+              <div class="gs-step-cta"><i class="ti ti-arrow-right" style="font-size:11px"></i> Create first skeleton</div>
+            </div>
+          </div>
+          <div class="gs-step">
+            <div class="gs-step-num">III</div>
+            <div>
+              <div class="gs-step-title">Set the style fingerprint</div>
+              <div class="gs-step-desc">Writing samples and voice rules. The battery scores every scene against this.</div>
+              <div class="gs-step-cta"><i class="ti ti-arrow-right" style="font-size:11px"></i> Configure fingerprint</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gs-entity-label">Or start with any entity</div>
+        <div class="gs-entity-grid">
+          <div class="gs-entity-card" onclick="spawnCard('location')">
+            <i class="ti ti-map-pin"></i>
+            <div class="gs-entity-card-label">Location</div>
+            <div class="gs-entity-card-hint">City, region, or place</div>
+          </div>
+          <div class="gs-entity-card" onclick="spawnCard('character')">
+            <i class="ti ti-user"></i>
+            <div class="gs-entity-card-label">Character</div>
+            <div class="gs-entity-card-hint">Person, figure, or role</div>
+          </div>
+          <div class="gs-entity-card" onclick="spawnCard('object')">
+            <i class="ti ti-tool"></i>
+            <div class="gs-entity-card-label">Object</div>
+            <div class="gs-entity-card-hint">Artifact, device, or item</div>
+          </div>
+          <div class="gs-entity-card" onclick="spawnCard('event')">
+            <i class="ti ti-timeline"></i>
+            <div class="gs-entity-card-label">Event</div>
+            <div class="gs-entity-card-hint">Moment in canon history</div>
+          </div>
+          <div class="gs-entity-card" onclick="spawnCard('org')">
+            <i class="ti ti-hierarchy"></i>
+            <div class="gs-entity-card-label">Organization</div>
+            <div class="gs-entity-card-hint">Guild, faction, or body</div>
+          </div>
+          <div class="gs-entity-card" onclick="spawnCard('skeleton')">
+            <i class="ti ti-book"></i>
+            <div class="gs-entity-card-label">Skeleton</div>
+            <div class="gs-entity-card-hint">Story shape with beats</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD CANVAS -->
+      <div class="card-canvas" id="card-canvas">
+        <div class="canvas-empty-hint" id="empty-hint">
+          <div class="canvas-empty-hint-text">The canvas is bare.</div>
+          <div class="canvas-empty-hint-sub">Right-click to add an entity · drag cards freely</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── RIGHT CONSOLE ── -->
+  <aside class="console">
+    <div class="console-header">
+      The Archivist
+      <div class="console-header-dot"></div>
+    </div>
+    <div class="console-messages" id="console-messages">
+      <div class="console-msg">
+        The case is empty. Where does this world begin — what's the first city I should know about?
+      </div>
+    </div>
+    <div class="console-chips">
+      <button class="console-chip" onclick="sendChip(this)">Suggest a location name</button>
+      <button class="console-chip" onclick="sendChip(this)">What makes a good skeleton?</button>
+      <button class="console-chip" onclick="sendChip(this)">Help me write a *_meta</button>
+    </div>
+    <div class="console-input-row">
+      <input class="console-input" id="console-input" placeholder="Ask the Archivist…" type="text" onkeydown="handleConsoleKey(event)" />
+      <button class="console-send" onclick="sendConsoleMsg()"><i class="ti ti-arrow-right"></i></button>
+    </div>
+  </aside>
+</div>
+
+<!-- CONTEXT MENU -->
+<div class="ctx-menu" id="ctx-menu">
+  <div class="ctx-item" onclick="ctxAdd('location')"><i class="ti ti-map-pin"></i> New location</div>
+  <div class="ctx-item" onclick="ctxAdd('character')"><i class="ti ti-user"></i> New character</div>
+  <div class="ctx-item" onclick="ctxAdd('object')"><i class="ti ti-tool"></i> New object</div>
+  <div class="ctx-item" onclick="ctxAdd('event')"><i class="ti ti-timeline"></i> New event</div>
+  <div class="ctx-item" onclick="ctxAdd('org')"><i class="ti ti-hierarchy"></i> New organization</div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item" onclick="ctxAdd('skeleton')"><i class="ti ti-book"></i> New skeleton</div>
+</div>
+
+<script>
+const ENTITY_TYPES = {
+  location:  { icon: 'ti-map-pin',   label: 'Location' },
+  character: { icon: 'ti-user',      label: 'Character' },
+  object:    { icon: 'ti-tool',      label: 'Object' },
+  event:     { icon: 'ti-timeline',  label: 'Event' },
+  org:       { icon: 'ti-hierarchy', label: 'Organization' },
+  theme:     { icon: 'ti-tag',       label: 'Theme' },
+  skeleton:  { icon: 'ti-book',      label: 'Skeleton' },
+};
+
+const SAMPLE_DATA = [
+  { type: 'location',  name: 'Slatewater',         meta: 'The industrial heart of the Steamlands — always overcast, always churning. Centre of everything.', canon: 'canon',  x: 60,  y: 60 },
+  { type: 'location',  name: 'Veldmere',            meta: 'A market city built on stilts above the tidal marshes, known for its floating night bazaars.',      canon: 'draft',  x: 290, y: 50 },
+  { type: 'character', name: 'Maren Cosgrave',      meta: 'Chief Registrar of the Archive. Precise, unhurried, and in possession of more information than she lets on.',   canon: 'canon',  x: 60,  y: 280 },
+  { type: 'character', name: 'The Ironwright',      meta: 'An itinerant engine mechanic of unknown origin. Appears where machinery fails, departs before thanks.',         canon: 'draft',  x: 290, y: 260 },
+  { type: 'object',    name: 'The Cormorant Lens',  meta: 'A brass optical instrument that, when correctly adjusted, reveals hidden watermarks in any printed document.',  canon: 'canon',  x: 520, y: 70 },
+  { type: 'skeleton',  name: 'The Recovered Letter',meta: 'A deposition register. A document surfaces, its author unknown. Three witnesses, one recanting.',              canon: 'draft',  x: 520, y: 280 },
+];
+
+let cards = [];
+let counts = { location: 0, character: 0, object: 0, event: 0, org: 0, theme: 0, skeleton: 0 };
+let showingGS = true;
+let ctxPos = { x: 0, y: 0 };
+
+// drag state
+let dragging = null, dragOffX = 0, dragOffY = 0;
+
+function setActive(el) {
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function toggleGettingStarted() {
+  showingGS = !showingGS;
+  document.getElementById('getting-started').classList.toggle('hidden', !showingGS);
+  document.getElementById('canvas-toggle-label').textContent = showingGS ? 'Show canvas' : 'Getting started';
+  document.getElementById('empty-hint').classList.toggle('visible', !showingGS && cards.length === 0);
+}
+
+function openAddCard() {
+  // In a real impl, this opens a modal. For demo, spawn a random type.
+  const types = Object.keys(ENTITY_TYPES);
+  spawnCard(types[Math.floor(Math.random() * types.length)]);
+}
+
+function spawnCard(type) {
+  const canvas = document.getElementById('card-canvas');
+  const rect = canvas.getBoundingClientRect();
+  const x = 40 + Math.random() * (rect.width - 240);
+  const y = 40 + Math.random() * (rect.height - 180);
+  addCard({ type, name: 'Untitled ' + ENTITY_TYPES[type].label, meta: 'No description yet.', canon: 'draft', x, y });
+  if (showingGS) toggleGettingStarted();
+}
+
+function ctxAdd(type) {
+  const canvas = document.getElementById('card-canvas');
+  const rect = canvas.getBoundingClientRect();
+  addCard({ type, name: 'Untitled ' + ENTITY_TYPES[type].label, meta: 'No description yet.', canon: 'draft', x: ctxPos.x - rect.left, y: ctxPos.y - rect.top });
+  hideCtxMenu();
+  if (showingGS) toggleGettingStarted();
+}
+
+function addCard(data) {
+  const canvas = document.getElementById('card-canvas');
+  const t = ENTITY_TYPES[data.type];
+  const el = document.createElement('div');
+  el.className = 'entity-card';
+  el.style.left = data.x + 'px';
+  el.style.top  = data.y + 'px';
+  el.innerHTML = `
+    <div class="entity-card-type"><i class="ti ${t.icon}"></i>${t.label}</div>
+    <div class="entity-card-body">
+      <div class="entity-card-name">${data.name}</div>
+      <div class="entity-card-meta">${data.meta}</div>
+    </div>
+    <div class="entity-card-footer">
+      <span class="entity-card-canon ${data.canon}">${data.canon}</span>
+      <span class="entity-card-edit"><i class="ti ti-pencil"></i></span>
+    </div>`;
+  el.addEventListener('mousedown', startDrag);
+  canvas.appendChild(el);
+  cards.push({ el, data });
+  counts[data.type] = (counts[data.type] || 0) + 1;
+  const counter = document.getElementById('count-' + data.type);
+  if (counter) counter.textContent = counts[data.type];
+  document.getElementById('empty-hint').classList.remove('visible');
+}
+
+function addSampleCards() {
+  SAMPLE_DATA.forEach(d => addCard(d));
+  if (showingGS) toggleGettingStarted();
+}
+
+function startDrag(e) {
+  if (e.button !== 0) return;
+  e.preventDefault();
+  const card = e.currentTarget;
+  const rect = card.getBoundingClientRect();
+  dragOffX = e.clientX - rect.left;
+  dragOffY = e.clientY - rect.top;
+  dragging = card;
+  card.classList.add('dragging');
+  card.style.zIndex = 50;
+}
+
+document.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const canvas = document.getElementById('card-canvas');
+  const rect = canvas.getBoundingClientRect();
+  let nx = e.clientX - rect.left - dragOffX;
+  let ny = e.clientY - rect.top - dragOffY;
+  dragging.style.left = Math.max(0, nx) + 'px';
+  dragging.style.top  = Math.max(0, ny) + 'px';
+});
+
+document.addEventListener('mouseup', () => {
+  if (!dragging) return;
+  dragging.classList.remove('dragging');
+  dragging.style.zIndex = '';
+  dragging = null;
+});
+
+function showCtxMenu(e) {
+  e.preventDefault();
+  ctxPos = { x: e.clientX, y: e.clientY };
+  const m = document.getElementById('ctx-menu');
+  m.style.left = e.clientX + 'px';
+  m.style.top  = e.clientY + 'px';
+  m.classList.add('visible');
+}
+
+function hideCtxMenu() { document.getElementById('ctx-menu').classList.remove('visible'); }
+document.addEventListener('click', hideCtxMenu);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') hideCtxMenu(); });
+
+// Console
+const REPLIES = [
+  "A strong first city should have contradictions — wealth beside industry, or beauty beside danger. What tension defines Slatewater?",
+  "A good skeleton is authored shape, not AI improvisation. Give me a premise, a reversal, and an ending. The engine fills in the prose, never the plot.",
+  "For a *_meta, describe the entity as if dictating a register entry — factual, precise, with one unexpected detail. What's the entity?",
+  "The naming grammar suggests Victorianate roots with a single shifted vowel or syllable. Would you like me to generate some candidates?",
+  "Canon compartmentalization matters here. Which aspects of this entity should be withheld from generation — excluded from all packets?",
+];
+let replyIdx = 0;
+
+function sendChip(btn) {
+  addMessage(btn.textContent, 'user');
+  setTimeout(() => addMessage(REPLIES[replyIdx % REPLIES.length], 'archivist'), 600);
+  replyIdx++;
+}
+
+function handleConsoleKey(e) { if (e.key === 'Enter') sendConsoleMsg(); }
+
+function sendConsoleMsg() {
+  const input = document.getElementById('console-input');
+  const val = input.value.trim();
+  if (!val) return;
+  addMessage(val, 'user');
+  input.value = '';
+  setTimeout(() => addMessage(REPLIES[replyIdx % REPLIES.length], 'archivist'), 700);
+  replyIdx++;
+}
+
+function addMessage(text, role) {
+  const msgs = document.getElementById('console-messages');
+  const div = document.createElement('div');
+  div.className = 'console-msg' + (role === 'user' ? ' user' : '');
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+</script>
+</body>
+</html>

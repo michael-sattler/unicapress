@@ -6,18 +6,11 @@
  */
 
 return [
-    // Parameterized routes (MUST come first to be matched before simple routes)
-    '/home' => [
-        'file' => 'index.php',
-        // 'params' => ['newcharacter' => 'newcharacter']
-    ]
-
-    // site routes (no params)
     '/' => 'admin/index.php',
+    '/home' => 'admin/index.php',
     '/api-tester' => 'admin/api-tester.php',
-    // 
-    // Add links to API diagnostics and other admin tools here
-    // /api/diagnostic-apihealth.php
-    // /api/diagnostic-dbhealth.php
 
+    // Add links to API diagnostics and other admin tools here
+    // '/api/diagnostic-apihealth.php' => ...
+    // '/api/diagnostic-dbhealth.php' => ...
 ];

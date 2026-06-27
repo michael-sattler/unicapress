@@ -5,7 +5,7 @@
     <body>
 
         <?php include __DIR__ . '/admin-navtop.php'; ?>
-        <div class="main admin w-100 bkgd-lighter" style="margin-top: 65px;">
+        <div class="main admin w-100 bkgd-lighter" style="margin-top: 80px;">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-2 bkgd-lightest border-right vh-100 leftnav" style="max-width: 250px;">

@@ -4,8 +4,8 @@
     <div class="row">
         <div class="col-12 bkgd-primary text-white">
             <div class="float-start p-1">
-                <a href="<?php echo APP_ADMIN_URL; ?>" class="text-typewritten text-xl mb-0 text-lightest" style="text-decoration: none;"><i class="fa-solid fa-pen-nib text-lg"></i> <span> amanuensis.</span></a>
-                <div class="text-xs pt-1 ms-4 text-lightest" style="margin-top: -10px;">YOUR INTELLIGENT storytelling PARTNER</div>
+                <a href="<?php echo APP_ADMIN_URL; ?>" class="text-typewritten text-xl mb-0 text-lightest" style="text-decoration: none;"><i class="fa-solid fa-pen-nib text-lg"></i> <span> <?php echo htmlspecialchars(SITE_NAME); ?></span></a>
+                <div class="text-xs pt-1 ms-4 text-lightest" style="margin-top: -10px;">STAFF ADMIN CONSOLE</div>
             </div>
             <div class="float-start">
                 <div class="p-3">
@@ -14,7 +14,7 @@
             </div>
             <div class="p-3 float-end">
                 <div class="navtop-right-user">
-                    <button class="btn btn-tiny btn-light-outline" onclick="window.open('<?php echo APP_BASE_URL; ?>', '_blank')"> Mainsite <i class="fa-solid fa-up-right-from-square"></i></button>
+                    <button class="btn btn-tiny btn-light-outline" onclick="window.open('<?php echo APP_URL; ?>', '_blank')"> Mainsite <i class="fa-solid fa-up-right-from-square"></i></button>
                     <i class="fa-solid fa-bug session-slider-toggle text-admin" style="cursor: pointer;"></i>
                     <i class="fa-solid fa-user text-lightest"></i>
                     <span class="text-lightest">Logged in as: <?php if(isset($_SESSION['admin_email'])){ echo $_SESSION['admin_email']; }else{ echo "Guest"; } ?></span>

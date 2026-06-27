@@ -7,6 +7,7 @@
 ob_start();
 
 require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/app/includes/functions-universal.php';
 
 $request_uri = $_SERVER['REQUEST_URI'];
 $parsed_url = parse_url($request_uri);

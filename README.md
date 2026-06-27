@@ -7,14 +7,17 @@ The Shell is separate from the App (worldbuilding tool + Telling engine + reader
 ## Project structure
 
 ```
-unicapress/
+unicapress/           # Shell repo (this repo)
+├── app/              # App scaffold → push to unicapress-app.git
 ├── docker/           # Docker configuration (PHP/Apache/MariaDB)
-├── docs/             # PRD, scope, standards
+├── docs/             # PRD, scope, standards, buildplan
 ├── public/           # Web root (cPanel document root in production)
-│   ├── api/          # REST API + diagnostics
-│   ├── app/          # Public site + admin console
+│   ├── api/          # Shell REST API + diagnostics
+│   ├── app/          # Public site + staff admin console
 │   └── config/       # Platform-aware configuration
 ```
+
+The **App** (worldbuilder + engine) is a separate codebase: [unicapress-app](https://github.com/michael-sattler/unicapress-app). See `app/README.md` for local setup.
 
 ## Quick start (Docker)
 

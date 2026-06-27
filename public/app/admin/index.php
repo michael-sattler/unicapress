@@ -1,10 +1,11 @@
 <?php
-require_once __DIR__ . "/../../config-app/config.php"; // App config. should in turn pull in project config
-require_once APP_PUBLIC_PATH . "/includes/functions-universal.php";
+require_once __DIR__ . "/../../config/config.php";
+require_once PUBLIC_ROOT . "/app/includes/functions-universal.php";
+require_once PUBLIC_ROOT . "/app/includes/functions-admin.php";
 
 adminonly(); // this will redirect to adminlogin.php if not logged in
 
-$pagetitle = "Public Home";
+$pagetitle = "Admin Home";
 
 // Start output buffering to capture page content
 ob_start();

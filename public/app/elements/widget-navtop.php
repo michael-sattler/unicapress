@@ -15,6 +15,9 @@
                     <a class="<?php echo nav_link_class('/about'); ?>" href="/about">About</a>
                 </li>
                 <li class="nav-item">
+                    <a class="<?php echo nav_link_class('/worldbuilding'); ?>" href="/worldbuilding">Worldbuilding</a>
+                </li>
+                <li class="nav-item">
                     <a class="<?php echo nav_link_class('/about-the-engine'); ?>" href="/about-the-engine">About the Engine</a>
                 </li>
                 <li class="nav-item d-none">

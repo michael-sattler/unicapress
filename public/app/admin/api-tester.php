@@ -1,25 +1,39 @@
 <?php
-require_once __DIR__ . "/../config-app/config.php"; // App config. should in turn pull in project config
-require_once APP_PUBLIC_PATH . "/app/includes/functions.php";
+require_once __DIR__ . "/../../config/config.php";
+require_once PUBLIC_ROOT . "/app/includes/functions-universal.php";
+require_once PUBLIC_ROOT . "/app/includes/functions-admin.php";
 
 adminonly(); // this will redirect to adminlogin.php if not logged in
 
 $pagetitle = "API Tester";
 
-// Function to get API routes
+// Function to get API routes, grouped by HTTP method for display
 function getApiRoutes() {
-    // Get routes from the shared configuration file
-    $routesFile = APP_PUBLIC_PATH . "/api/config-api/routes.php";
+    // Get routes from the shared API routes file
+    $routesFile = PUBLIC_ROOT . "/api/routes.php";
     if (!file_exists($routesFile)) {
         return [];
     }
 
-    // Load the routes array
+    // Load the routes array (shape: ['GET' => ['path' => 'handler', ...], 'POST' => [...], ...])
     $routes = require $routesFile;
-    
+
     if (!is_array($routes)) {
         return [];
     }
+
+    $grouped = [];
+    foreach ($routes as $method => $paths) {
+        if (!is_array($paths)) {
+            continue;
+        }
+        foreach ($paths as $path => $handler) {
+            $grouped[$method][] = ['method' => $method, 'path' => $path];
+        }
+    }
+
+    return $grouped;
+}
 
 // Get organized routes
 $apiRoutes = getApiRoutes();
@@ -100,7 +114,7 @@ Authorization: Bearer <?php echo htmlspecialchars(defined('API_TOKEN') ? API_TOK
 
             <div class="card mt-4">
                 <div class="card-header">
-                    Available Endpoints <small>dynsamically sourced from api/config-api/routes.php</small>
+                    Available Endpoints <small>dynamically sourced from api/routes.php</small>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -201,7 +215,7 @@ Authorization: Bearer <?php echo htmlspecialchars(defined('API_TOKEN') ? API_TOK
 
 <script>
 // Add API base URL to the page
-const API_BASE_URL = <?php echo json_encode(defined('APP_API_URL') ? APP_API_URL : 'http://api.myamanuensislocal.com'); ?>;
+const API_BASE_URL = <?php echo json_encode(defined('APP_API_URL') ? APP_API_URL : 'http://localhost:8080/api'); ?>;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Load saved tests from localStorage

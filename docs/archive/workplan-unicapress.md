@@ -20,6 +20,8 @@ This plan sequences build work across five phases. Phases are **gates**, not cal
 | **F — Author tooling** | World package editor, skeleton authoring, proofing bench | Phase 0–1 |
 | **X — Experience** | Retrieval faceplate, manuscript reader, patron shelf, lending | Phase 1–2 |
 
+NOTE The worldbuilding tools should be published under workbench.unicapress.com
+
 The Experience stream consumes the Engine exclusively through the Telling API (PRD §9). The Engine consumes the World Package read-only at generation time. The Shell consumes nothing from the App except an optional public version string (see scope-marketing-shell.md §4).
 
 ---

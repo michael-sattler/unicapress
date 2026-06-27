@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Unica Workshop — Canvas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #111110;
+  --surface-1:   #1a1917;
+  --surface-2:   #222120;
+  --surface-3:   #2c2b29;
+  --surface-4:   #353430;
+  --border:      rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.15);
+  --text-primary:   #e8e4dc;
+  --text-secondary: #9e9a92;
+  --text-muted:     #5c5955;
+  --accent:      #c8b88a;
+  --accent-dim:  rgba(200,184,138,0.12);
+  --accent-border: rgba(200,184,138,0.3);
+  --radius: 8px;
+  --nav-width: 208px;
+  --console-width: 248px;
+  --font-serif: 'IM Fell English', Georgia, serif;
+  --font-body:  'EB Garamond', Georgia, serif;
+  --font-sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* type colors — muted, dark-mode appropriate */
+  --c-location:  #6b9fb8;
+  --c-character: #a87caa;
+  --c-object:    #b8936b;
+  --c-event:     #7aaa7a;
+  --c-org:       #aa8c6b;
+  --c-theme:     #8c9eb8;
+  --c-skeleton:  #b8826b;
+}
+
+html, body { height: 100%; background: var(--bg); color: var(--text-primary); font-family: var(--font-sans); font-size: 14px; overflow: hidden; }
+
+/* ── APP SHELL ── */
+.app { display: flex; height: 100vh; }
+
+/* ── LEFT NAV ── */
+.nav {
+  width: var(--nav-width); min-width: var(--nav-width);
+  background: var(--surface-1);
+  border-right: 0.5px solid var(--border);
+  display: flex; flex-direction: column;
+}
+.nav-logo { padding: 18px 16px 14px; border-bottom: 0.5px solid var(--border); }
+.nav-logo-world { font-family: var(--font-serif); font-size: 15px; color: var(--text-primary); display: block; margin-bottom: 2px; }
+.nav-logo-sub { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+.nav-section { padding: 14px 12px 4px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+.nav-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; margin: 1px 6px;
+  font-size: 13px; color: var(--text-secondary);
+  border-radius: 6px; cursor: pointer;
+  transition: background 0.12s, color 0.12s; user-select: none;
+}
+.nav-item:hover { background: var(--surface-2); color: var(--text-primary); }
+.nav-item.active { background: var(--surface-3); color: var(--text-primary); }
+.nav-item .ti { font-size: 15px; color: var(--text-muted); flex-shrink: 0; }
+.nav-item.active .ti { color: var(--accent); }
+.nav-count { margin-left: auto; font-size: 11px; color: var(--text-muted); background: var(--surface-2); padding: 1px 6px; border-radius: 10px; }
+.nav-divider { height: 0.5px; background: var(--border); margin: 8px 12px; }
+.nav-bottom { margin-top: auto; padding: 12px; border-top: 0.5px solid var(--border); }
+.nav-publish-btn {
+  width: 100%; padding: 8px 0;
+  font-family: var(--font-serif); font-size: 13px;
+  cursor: pointer; border: 0.5px solid var(--accent-border);
+  border-radius: var(--radius); background: var(--surface-2); color: var(--accent);
+  transition: background 0.12s;
+}
+.nav-publish-btn:hover { background: var(--surface-3); }
+
+/* ── MAIN ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+/* ── TOPBAR ── */
+.topbar {
+  height: 44px; min-height: 44px;
+  border-bottom: 0.5px solid var(--border);
+  display: flex; align-items: center; padding: 0 14px; gap: 8px;
+  background: var(--surface-1);
+}
+.topbar-title { font-family: var(--font-serif); font-size: 14px; color: var(--text-primary); }
+.topbar-sep { width: 0.5px; height: 16px; background: var(--border-strong); margin: 0 2px; }
+.topbar-meta { font-size: 12px; color: var(--text-muted); flex: 1; }
+.tb-btn {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; color: var(--text-secondary);
+  padding: 5px 9px; border: 0.5px solid var(--border);
+  border-radius: var(--radius); cursor: pointer; background: transparent;
+  font-family: var(--font-sans); white-space: nowrap;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+}
+.tb-btn:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.tb-btn.active { border-color: var(--accent-border); color: var(--accent); background: var(--accent-dim); }
+.tb-btn .ti { font-size: 13px; }
+.tb-btn-primary { border-color: var(--accent-border); color: var(--accent); }
+.tb-btn-primary:hover { background: var(--accent-dim); }
+
+/* ── TOOLBAR (filter + arrange row) ── */
+.toolbar {
+  height: 40px; min-height: 40px;
+  border-bottom: 0.5px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 14px; gap: 6px;
+  background: var(--surface-1);
+  overflow-x: auto;
+}
+.toolbar::-webkit-scrollbar { display: none; }
+
+.filter-label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.04em; margin-right: 2px; white-space: nowrap; }
+
+.filter-chip {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; padding: 4px 9px;
+  border: 0.5px solid var(--border);
+  border-radius: 20px; cursor: pointer;
+  background: transparent; color: var(--text-secondary);
+  font-family: var(--font-sans); white-space: nowrap;
+  transition: all 0.12s;
+}
+.filter-chip .ti { font-size: 12px; }
+.filter-chip:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.filter-chip.active { color: var(--chip-color, var(--accent)); border-color: var(--chip-color, var(--accent)); background: var(--chip-bg, var(--accent-dim)); }
+.filter-chip .chip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--chip-color, var(--accent)); opacity: 0.7; }
+
+.toolbar-sep { width: 0.5px; height: 18px; background: var(--border-strong); margin: 0 4px; flex-shrink: 0; }
+
+.arrange-group { display: flex; gap: 3px; }
+.arrange-btn {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; padding: 4px 9px;
+  border: 0.5px solid var(--border);
+  border-radius: 6px; cursor: pointer;
+  background: transparent; color: var(--text-secondary);
+  font-family: var(--font-sans); white-space: nowrap;
+  transition: all 0.12s;
+}
+.arrange-btn:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.arrange-btn.active { border-color: var(--border-strong); background: var(--surface-3); color: var(--text-primary); }
+.arrange-btn .ti { font-size: 13px; }
+
+.density-btn {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; padding: 4px 9px;
+  border: 0.5px solid var(--border);
+  border-radius: 6px; cursor: pointer;
+  background: transparent; color: var(--text-secondary);
+  font-family: var(--font-sans); white-space: nowrap;
+  transition: all 0.12s; flex-shrink: 0;
+}
+.density-btn:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.density-btn.active { border-color: var(--border-strong); background: var(--surface-3); color: var(--text-primary); }
+
+/* ── CANVAS ── */
+.canvas-wrap {
+  flex: 1; position: relative; overflow: hidden;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.09) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Lane labels (groups mode) */
+.lane-label {
+  position: absolute;
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-muted); pointer-events: none;
+  display: flex; align-items: center; gap: 6px;
+  opacity: 0; transition: opacity 0.3s;
+}
+.lane-label::after {
+  content: ''; flex: 1; height: 0.5px;
+  background: var(--border); min-width: 60px;
+}
+.lane-label.visible { opacity: 1; }
+
+/* ── ENTITY CARDS ── */
+.entity-card {
+  position: absolute;
+  width: 192px;
+  background: var(--surface-1);
+  border: 0.5px solid var(--border);
+  border-radius: 10px;
+  cursor: grab; user-select: none;
+  transition: border-color 0.12s, box-shadow 0.12s, opacity 0.2s, transform 0.35s, left 0.35s, top 0.35s, width 0.2s;
+  overflow: hidden;
+}
+.entity-card:hover { border-color: var(--border-strong); }
+.entity-card.dragging { cursor: grabbing; box-shadow: 0 8px 32px rgba(0,0,0,0.6); z-index: 100; transition: border-color 0.12s, box-shadow 0.12s, opacity 0.2s; }
+.entity-card.filtered-out { opacity: 0; pointer-events: none; }
+.entity-card.selected { border-color: var(--accent) !important; box-shadow: 0 0 0 1px var(--accent); }
+
+/* type accent stripe */
+.entity-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--type-color, transparent);
+  opacity: 0.6;
+}
+
+.card-type-row {
+  display: flex; align-items: center; gap: 6px;
+  padding: 9px 12px 6px;
+  border-bottom: 0.5px solid var(--border);
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+.card-type-row .ti { font-size: 12px; color: var(--type-color, var(--text-muted)); }
+
+.card-body { padding: 10px 12px 10px; }
+.card-name { font-family: var(--font-serif); font-size: 14px; color: var(--text-primary); margin-bottom: 4px; line-height: 1.3; }
+.card-meta {
+  font-family: var(--font-body); font-style: italic;
+  font-size: 12px; color: var(--text-secondary); line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  transition: all 0.2s;
+}
+
+.card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 12px 8px; border-top: 0.5px solid var(--border);
+}
+.card-canon {
+  font-size: 10px; padding: 2px 7px; border-radius: 10px; letter-spacing: 0.04em;
+}
+.card-canon.canon { background: var(--accent-dim); color: var(--accent); border: 0.5px solid var(--accent-border); }
+.card-canon.draft { background: var(--surface-2); color: var(--text-muted); border: 0.5px solid var(--border); }
+.card-canon.excluded { background: rgba(180,80,80,0.1); color: #b85050; border: 0.5px solid rgba(180,80,80,0.2); }
+
+.card-actions { display: flex; gap: 4px; }
+.card-action { font-size: 13px; color: var(--text-muted); cursor: pointer; padding: 2px 3px; border-radius: 4px; transition: color 0.1s; }
+.card-action:hover { color: var(--text-primary); }
+
+/* ── COMPACT MODE ── */
+.entity-card.compact {
+  width: 160px;
+  border-radius: 7px;
+}
+.entity-card.compact .card-body { padding: 6px 10px 6px; }
+.entity-card.compact .card-name { font-size: 12px; margin-bottom: 0; }
+.entity-card.compact .card-meta { display: none; }
+.entity-card.compact .card-footer { padding: 4px 10px 6px; }
+.entity-card.compact .card-type-row { padding: 6px 10px 4px; }
+
+/* ── SWIM LANE LABELS ── */
+#lane-overlay {
+  position: absolute; inset: 0; pointer-events: none; z-index: 5;
+}
+
+/* ── RIGHT CONSOLE ── */
+.console {
+  width: var(--console-width); min-width: var(--console-width);
+  background: var(--surface-1); border-left: 0.5px solid var(--border);
+  display: flex; flex-direction: column;
+}
+.console-header {
+  height: 44px; min-height: 44px; padding: 0 14px;
+  border-bottom: 0.5px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--font-serif); font-size: 14px; color: var(--text-primary);
+}
+.console-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: 0.6; }
+.console-messages { flex: 1; padding: 14px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.console-msg {
+  font-family: var(--font-body); font-size: 13.5px; line-height: 1.6;
+  color: var(--text-secondary); padding: 10px 12px;
+  background: var(--surface-2); border-radius: 8px; border: 0.5px solid var(--border);
+}
+.console-msg.user {
+  background: var(--surface-3); color: var(--text-primary);
+  margin-left: 12px; font-family: var(--font-sans); font-size: 12px;
+}
+.console-chips { padding: 8px 14px; display: flex; flex-direction: column; gap: 6px; border-top: 0.5px solid var(--border); }
+.console-chip {
+  font-size: 11px; padding: 6px 10px; border: 0.5px solid var(--border);
+  border-radius: 20px; color: var(--text-secondary); cursor: pointer;
+  background: var(--surface-2); text-align: left; font-family: var(--font-sans);
+  transition: border-color 0.12s, color 0.12s; line-height: 1.4;
+}
+.console-chip:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.console-input-row { padding: 10px 14px; border-top: 0.5px solid var(--border); display: flex; gap: 6px; align-items: center; }
+.console-input {
+  flex: 1; font-size: 12px; padding: 7px 10px;
+  background: var(--surface-2); border: 0.5px solid var(--border);
+  border-radius: var(--radius); color: var(--text-primary); font-family: var(--font-sans);
+  outline: none; transition: border-color 0.12s;
+}
+.console-input::placeholder { color: var(--text-muted); }
+.console-input:focus { border-color: var(--border-strong); }
+.console-send {
+  padding: 7px 10px; background: var(--surface-2); border: 0.5px solid var(--border);
+  border-radius: var(--radius); cursor: pointer; color: var(--text-secondary);
+  font-size: 14px; transition: border-color 0.12s, color 0.12s;
+}
+.console-send:hover { border-color: var(--border-strong); color: var(--text-primary); }
+
+/* ── CONTEXT MENU ── */
+.ctx-menu {
+  position: fixed; background: var(--surface-2); border: 0.5px solid var(--border-strong);
+  border-radius: 8px; padding: 4px; z-index: 1000; min-width: 160px;
+  display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+.ctx-menu.visible { display: block; }
+.ctx-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; font-size: 13px; color: var(--text-secondary);
+  border-radius: 5px; cursor: pointer; transition: background 0.1s, color 0.1s;
+}
+.ctx-item:hover { background: var(--surface-3); color: var(--text-primary); }
+.ctx-item .ti { font-size: 14px; color: var(--text-muted); }
+.ctx-divider { height: 0.5px; background: var(--border); margin: 3px 0; }
+
+/* ── STATUS BAR ── */
+.statusbar {
+  height: 26px; min-height: 26px;
+  border-top: 0.5px solid var(--border);
+  display: flex; align-items: center; padding: 0 14px; gap: 14px;
+  background: var(--surface-1);
+}
+.status-item { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+.status-item .ti { font-size: 11px; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- LEFT NAV -->
+  <nav class="nav">
+    <div class="nav-logo">
+      <span class="nav-logo-world">The Steamlands</span>
+      <span class="nav-logo-sub">Workshop</span>
+    </div>
+    <div class="nav-section">World</div>
+    <div class="nav-item" onclick="setActive(this)"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+    <div class="nav-item" onclick="setActive(this)"><i class="ti ti-package"></i> World package</div>
+    <div class="nav-divider"></div>
+    <div class="nav-section">Entities</div>
+    <div class="nav-item active" onclick="setActive(this); filterByType('location')" data-type="location">
+      <i class="ti ti-map-pin"></i> Locations <span class="nav-count" id="nc-location">4</span>
+    </div>
+    <div class="nav-item" onclick="setActive(this); filterByType('character')" data-type="character">
+      <i class="ti ti-users"></i> Characters <span class="nav-count" id="nc-character">4</span>
+    </div>
+    <div class="nav-item" onclick="setActive(this); filterByType('object')" data-type="object">
+      <i class="ti ti-tool"></i> Objects <span class="nav-count" id="nc-object">3</span>
+    </div>
+    <div class="nav-item" onclick="setActive(this); filterByType('event')" data-type="event">
+      <i class="ti ti-timeline"></i> Events <span class="nav-count" id="nc-event">3</span>
+    </div>
+    <div class="nav-item" onclick="setActive(this); filterByType('org')" data-type="org">
+      <i class="ti ti-hierarchy"></i> Organizations <span class="nav-count" id="nc-org">2</span>
+    </div>
+    <div class="nav-item" onclick="setActive(this); filterByType('skeleton')" data-type="skeleton">
+      <i class="ti ti-book"></i> Skeletons <span class="nav-count" id="nc-skeleton">3</span>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-section">Stories</div>
+    <div class="nav-item" onclick="setActive(this)"><i class="ti ti-test-pipe"></i> Proofing bench</div>
+    <div class="nav-item" onclick="setActive(this)"><i class="ti ti-chart-bar"></i> Quality dashboard</div>
+    <div class="nav-bottom">
+      <button class="nav-publish-btn">Publish package ↗</button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <span class="topbar-title">Canvas</span>
+      <span class="topbar-sep"></span>
+      <span class="topbar-meta">v0 · 19 entities · no published package</span>
+      <button class="tb-btn" onclick="clearAllFilters()"><i class="ti ti-adjustments-horizontal"></i> All entities</button>
+      <button class="tb-btn tb-btn-primary" onclick="spawnBlankCard()"><i class="ti ti-plus"></i> New entity</button>
+    </div>
+
+    <!-- TOOLBAR: filters + arrange -->
+    <div class="toolbar">
+      <span class="filter-label">Show</span>
+
+      <!-- Type filters -->
+      <button class="filter-chip active" id="fc-location"
+        style="--chip-color:var(--c-location);--chip-bg:rgba(107,159,184,0.1)"
+        onclick="toggleTypeFilter('location')">
+        <i class="ti ti-map-pin"></i> Locations
+      </button>
+      <button class="filter-chip active" id="fc-character"
+        style="--chip-color:var(--c-character);--chip-bg:rgba(168,124,170,0.1)"
+        onclick="toggleTypeFilter('character')">
+        <i class="ti ti-user"></i> Characters
+      </button>
+      <button class="filter-chip active" id="fc-object"
+        style="--chip-color:var(--c-object);--chip-bg:rgba(184,147,107,0.1)"
+        onclick="toggleTypeFilter('object')">
+        <i class="ti ti-tool"></i> Objects
+      </button>
+      <button class="filter-chip active" id="fc-event"
+        style="--chip-color:var(--c-event);--chip-bg:rgba(122,170,122,0.1)"
+        onclick="toggleTypeFilter('event')">
+        <i class="ti ti-timeline"></i> Events
+      </button>
+      <button class="filter-chip active" id="fc-org"
+        style="--chip-color:var(--c-org);--chip-bg:rgba(170,140,107,0.1)"
+        onclick="toggleTypeFilter('org')">
+        <i class="ti ti-hierarchy"></i> Orgs
+      </button>
+      <button class="filter-chip active" id="fc-skeleton"
+        style="--chip-color:var(--c-skeleton);--chip-bg:rgba(184,130,107,0.1)"
+        onclick="toggleTypeFilter('skeleton')">
+        <i class="ti ti-book"></i> Skeletons
+      </button>
+
+      <div class="toolbar-sep"></div>
+
+      <!-- Status filters -->
+      <button class="filter-chip active" id="fs-canon"
+        style="--chip-color:var(--accent);--chip-bg:var(--accent-dim)"
+        onclick="toggleStatusFilter('canon')">
+        <span class="chip-dot"></span> Canon
+      </button>
+      <button class="filter-chip active" id="fs-draft"
+        style="--chip-color:var(--text-muted);--chip-bg:rgba(255,255,255,0.03)"
+        onclick="toggleStatusFilter('draft')">
+        <span class="chip-dot"></span> Draft
+      </button>
+      <button class="filter-chip active" id="fs-excluded"
+        style="--chip-color:#b85050;--chip-bg:rgba(184,80,80,0.08)"
+        onclick="toggleStatusFilter('excluded')">
+        <span class="chip-dot"></span> Excluded
+      </button>
+
+      <div class="toolbar-sep"></div>
+
+      <!-- Arrange -->
+      <div class="arrange-group">
+        <button class="arrange-btn active" id="arr-free" onclick="setArrange('free')">
+          <i class="ti ti-layout-distribute-horizontal"></i> Free
+        </button>
+        <button class="arrange-btn" id="arr-lanes" onclick="setArrange('lanes')">
+          <i class="ti ti-layout-rows"></i> Swim lanes
+        </button>
+        <button class="arrange-btn" id="arr-group" onclick="setArrange('group')">
+          <i class="ti ti-layout-grid"></i> Group
+        </button>
+      </div>
+
+      <button class="density-btn" id="density-btn" onclick="toggleCompact()">
+        <i class="ti ti-layout-list" id="density-icon"></i> <span id="density-label">Compact</span>
+      </button>
+    </div>
+
+    <!-- CANVAS -->
+    <div class="canvas-wrap" id="canvas-wrap" oncontextmenu="showCtxMenu(event)">
+      <div id="lane-overlay"></div>
+      <!-- cards injected by JS -->
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="statusbar">
+      <span class="status-item"><i class="ti ti-stack-2"></i> <span id="sb-visible">19</span> visible</span>
+      <span class="status-item"><i class="ti ti-star"></i> <span id="sb-canon">11</span> canon</span>
+      <span class="status-item"><i class="ti ti-edit"></i> <span id="sb-draft">7</span> draft</span>
+      <span class="status-item"><i class="ti ti-eye-off"></i> <span id="sb-excl">1</span> excluded</span>
+    </div>
+  </main>
+
+  <!-- RIGHT CONSOLE -->
+  <aside class="console">
+    <div class="console-header">
+      The Archivist <div class="console-dot"></div>
+    </div>
+    <div class="console-messages" id="console-messages">
+      <div class="console-msg">
+        The canvas holds 19 entities across 6 types. Slatewater and Veldmere are your most-referenced locations — three characters each list them as primary ground.
+      </div>
+    </div>
+    <div class="console-chips">
+      <button class="console-chip" onclick="sendChip(this)">Which entities are thinnest?</button>
+      <button class="console-chip" onclick="sendChip(this)">Suggest a character for Veldmere</button>
+      <button class="console-chip" onclick="sendChip(this)">What's still needed for launch?</button>
+    </div>
+    <div class="console-input-row">
+      <input class="console-input" id="console-input" placeholder="Ask the Archivist…" type="text" onkeydown="if(event.key==='Enter')sendConsoleMsg()" />
+      <button class="console-send" onclick="sendConsoleMsg()"><i class="ti ti-arrow-right"></i></button>
+    </div>
+  </aside>
+</div>
+
+<!-- CONTEXT MENU -->
+<div class="ctx-menu" id="ctx-menu">
+  <div class="ctx-item" onclick="ctxAdd('location')"><i class="ti ti-map-pin"></i> New location</div>
+  <div class="ctx-item" onclick="ctxAdd('character')"><i class="ti ti-user"></i> New character</div>
+  <div class="ctx-item" onclick="ctxAdd('object')"><i class="ti ti-tool"></i> New object</div>
+  <div class="ctx-item" onclick="ctxAdd('event')"><i class="ti ti-timeline"></i> New event</div>
+  <div class="ctx-item" onclick="ctxAdd('org')"><i class="ti ti-hierarchy"></i> New org</div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item" onclick="ctxAdd('skeleton')"><i class="ti ti-book"></i> New skeleton</div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────
+const TYPE_META = {
+  location:  { icon: 'ti-map-pin',   label: 'Location',     color: 'var(--c-location)' },
+  character: { icon: 'ti-user',      label: 'Character',    color: 'var(--c-character)' },
+  object:    { icon: 'ti-tool',      label: 'Object',       color: 'var(--c-object)' },
+  event:     { icon: 'ti-timeline',  label: 'Event',        color: 'var(--c-event)' },
+  org:       { icon: 'ti-hierarchy', label: 'Organization', color: 'var(--c-org)' },
+  skeleton:  { icon: 'ti-book',      label: 'Skeleton',     color: 'var(--c-skeleton)' },
+};
+
+const SEED_CARDS = [
+  // Locations
+  { type:'location',  name:'Slatewater',            canon:'canon',    meta:'The industrial heart — always overcast, always churning. Centre of everything.' },
+  { type:'location',  name:'Veldmere',               canon:'draft',    meta:'A market city built on stilts above the tidal marshes, known for its floating night bazaars.' },
+  { type:'location',  name:'Callowhaven',            canon:'canon',    meta:'A coastal garrison town. The empire keeps its oldest warships moored here, rusting and purposeful.' },
+  { type:'location',  name:'The Greyworks',          canon:'canon',    meta:'A vast inland factory district. No residential quarter. Shifts run through the night by gaslight.' },
+  // Characters
+  { type:'character', name:'Maren Cosgrave',         canon:'canon',    meta:'Chief Registrar of the Archive. Precise, unhurried, and in possession of more information than she lets on.' },
+  { type:'character', name:'The Ironwright',          canon:'draft',    meta:'An itinerant engine mechanic of unknown origin. Appears where machinery fails, departs before thanks.' },
+  { type:'character', name:'Aldous Pern',             canon:'canon',    meta:'A factor for the Slatework Exchange. Meticulous, indebted, and quietly terrified of the Society.' },
+  { type:'character', name:'Cassiel Undre',           canon:'canon',    meta:'A cartographer who never publishes. Her maps are commissioned only by those who cannot be seen to ask.' },
+  // Objects
+  { type:'object',    name:'The Cormorant Lens',     canon:'canon',    meta:'A brass optical instrument that reveals hidden watermarks in any printed document.' },
+  { type:'object',    name:'Pern\'s Ledger',          canon:'draft',    meta:'A cipher-locked accounts book. Three different cipher systems, one for each owner.' },
+  { type:'object',    name:'The Bone Slip',           canon:'excluded', meta:'A Within Wheels artifact — excluded from generation packets. Compartmentalized.' },
+  // Events
+  { type:'event',     name:'The Callowhaven Closure', canon:'canon',    meta:'The empire sealed the harbour without explanation. Seventeen ships were still at anchor.' },
+  { type:'event',     name:'The Exchange Fire',        canon:'canon',    meta:'The Slatework Exchange burned for three days. The causes are officially undetermined.' },
+  { type:'event',     name:'The First Census',        canon:'draft',    meta:'The empire\'s attempt to count everything. It failed in the marshes.' },
+  // Orgs
+  { type:'org',       name:'The Slatework Exchange',  canon:'canon',    meta:'The dominant trading body of the Steamlands. Older than the empire, and aware of it.' },
+  { type:'org',       name:'The Society',             canon:'excluded', meta:'Within Wheels — compartmentalized. Name may appear in packets; nature must not.' },
+  // Skeletons
+  { type:'skeleton',  name:'The Recovered Letter',    canon:'canon',    meta:'Register: Deposition. A document surfaces. Three witnesses. One recanting. A real ending.' },
+  { type:'skeleton',  name:'The Night Errand',        canon:'draft',    meta:'Register: Penny dreadful. A simple task at nightfall unravels into something much larger.' },
+  { type:'skeleton',  name:'The Account of Arrival',  canon:'canon',    meta:'Register: Mariner\'s account. A stranger arrives in a city that was expecting someone else.' },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────
+let cards = [];
+let activeTypeFilters = new Set(['location','character','object','event','org','skeleton']);
+let activeStatusFilters = new Set(['canon','draft','excluded']);
+let arrangeMode = 'free';
+let compactMode = false;
+let freePositions = {}; // id -> {x,y}
+
+// drag
+let dragging = null, dragOffX = 0, dragOffY = 0;
+let ctxPos = { x: 0, y: 0 };
+
+// ── INIT ──────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const wrap = document.getElementById('canvas-wrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+
+  // Assign free positions in a loose scatter
+  const typeOrder = ['location','character','object','event','org','skeleton'];
+  const typeBuckets = {};
+  typeOrder.forEach(t => typeBuckets[t] = []);
+  SEED_CARDS.forEach(d => typeBuckets[d.type].push(d));
+
+  let id = 0;
+  // Place in rough columns by type to start (looks intentional)
+  const cols = 4;
+  let placed = 0;
+  SEED_CARDS.forEach((d, i) => {
+    const col = placed % cols;
+    const row = Math.floor(placed / cols);
+    const jitter = () => (Math.random() - 0.5) * 30;
+    const x = 40 + col * 220 + jitter();
+    const y = 30 + row * 195 + jitter();
+    freePositions[i] = { x, y };
+    placed++;
+  });
+
+  SEED_CARDS.forEach((d, i) => {
+    createCard(d, i, freePositions[i].x, freePositions[i].y);
+  });
+
+  updateStatusBar();
+});
+
+function createCard(data, id, x, y) {
+  const t = TYPE_META[data.type];
+  const wrap = document.getElementById('canvas-wrap');
+  const el = document.createElement('div');
+  el.className = 'entity-card';
+  el.dataset.id = id;
+  el.dataset.type = data.type;
+  el.dataset.canon = data.canon;
+  el.style.setProperty('--type-color', t.color);
+  el.style.left = x + 'px';
+  el.style.top  = y + 'px';
+  el.innerHTML = `
+    <div class="card-type-row"><i class="ti ${t.icon}"></i>${t.label}</div>
+    <div class="card-body">
+      <div class="card-name">${data.name}</div>
+      <div class="card-meta">${data.meta}</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-canon ${data.canon}">${data.canon}</span>
+      <span class="card-actions">
+        <span class="card-action" title="Edit"><i class="ti ti-pencil"></i></span>
+        <span class="card-action" title="More"><i class="ti ti-dots"></i></span>
+      </span>
+    </div>`;
+  el.addEventListener('mousedown', startDrag);
+  wrap.appendChild(el);
+  cards.push({ el, data, id });
+  return el;
+}
+
+// ── DRAG ──────────────────────────────────────────────────────────
+function startDrag(e) {
+  if (e.button !== 0 || e.target.closest('.card-action')) return;
+  e.preventDefault();
+  if (arrangeMode !== 'free') return; // drag only in free mode
+  const card = e.currentTarget;
+  const rect = card.getBoundingClientRect();
+  dragOffX = e.clientX - rect.left;
+  dragOffY = e.clientY - rect.top;
+  dragging = card;
+  card.classList.add('dragging');
+}
+document.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const wrap = document.getElementById('canvas-wrap');
+  const rect = wrap.getBoundingClientRect();
+  const nx = Math.max(0, e.clientX - rect.left - dragOffX);
+  const ny = Math.max(0, e.clientY - rect.top - dragOffY);
+  dragging.style.left = nx + 'px';
+  dragging.style.top  = ny + 'px';
+  freePositions[dragging.dataset.id] = { x: nx, y: ny };
+});
+document.addEventListener('mouseup', () => {
+  if (!dragging) return;
+  dragging.classList.remove('dragging');
+  dragging = null;
+});
+
+// ── FILTERS ───────────────────────────────────────────────────────
+function toggleTypeFilter(type) {
+  if (activeTypeFilters.has(type)) {
+    if (activeTypeFilters.size === 1) return; // keep at least one
+    activeTypeFilters.delete(type);
+    document.getElementById('fc-' + type).classList.remove('active');
+  } else {
+    activeTypeFilters.add(type);
+    document.getElementById('fc-' + type).classList.add('active');
+  }
+  applyFilters();
+}
+
+function toggleStatusFilter(status) {
+  if (activeStatusFilters.has(status)) {
+    if (activeStatusFilters.size === 1) return;
+    activeStatusFilters.delete(status);
+    document.getElementById('fs-' + status).classList.remove('active');
+  } else {
+    activeStatusFilters.add(status);
+    document.getElementById('fs-' + status).classList.add('active');
+  }
+  applyFilters();
+}
+
+function clearAllFilters() {
+  ['location','character','object','event','org','skeleton'].forEach(t => {
+    activeTypeFilters.add(t);
+    const el = document.getElementById('fc-' + t);
+    if (el) el.classList.add('active');
+  });
+  ['canon','draft','excluded'].forEach(s => {
+    activeStatusFilters.add(s);
+    const el = document.getElementById('fs-' + s);
+    if (el) el.classList.add('active');
+  });
+  applyFilters();
+}
+
+function filterByType(type) {
+  // Solo-filter to just this type
+  ['location','character','object','event','org','skeleton'].forEach(t => {
+    const el = document.getElementById('fc-' + t);
+    if (t === type) { activeTypeFilters.add(t); if(el) el.classList.add('active'); }
+    else { activeTypeFilters.delete(t); if(el) el.classList.remove('active'); }
+  });
+  applyFilters();
+}
+
+function applyFilters() {
+  let visible = 0;
+  cards.forEach(({ el, data }) => {
+    const show = activeTypeFilters.has(data.type) && activeStatusFilters.has(data.canon);
+    el.classList.toggle('filtered-out', !show);
+    if (show) visible++;
+  });
+  document.getElementById('sb-visible').textContent = visible;
+}
+
+// ── ARRANGE ───────────────────────────────────────────────────────
+function setArrange(mode) {
+  arrangeMode = mode;
+  ['free','lanes','group'].forEach(m => {
+    document.getElementById('arr-' + m).classList.toggle('active', m === mode);
+  });
+  applyArrange();
+}
+
+function applyArrange() {
+  const wrap = document.getElementById('canvas-wrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  const overlay = document.getElementById('lane-overlay');
+  overlay.innerHTML = '';
+
+  if (arrangeMode === 'free') {
+    cards.forEach(({ el, id }) => {
+      const pos = freePositions[el.dataset.id] || { x: 40, y: 40 };
+      el.style.left = pos.x + 'px';
+      el.style.top  = pos.y + 'px';
+    });
+    return;
+  }
+
+  if (arrangeMode === 'lanes') {
+    const typeOrder = ['location','character','object','event','org','skeleton'];
+    const visibleTypes = typeOrder.filter(t => activeTypeFilters.has(t));
+    const laneH = Math.max(160, Math.floor((H - 20) / Math.max(visibleTypes.length, 1)));
+    const cardW = compactMode ? 160 : 192;
+    const cardH = compactMode ? 120 : 185;
+    const colGap = 12;
+
+    visibleTypes.forEach((type, laneIdx) => {
+      const yTop = 10 + laneIdx * laneH;
+      const t = TYPE_META[type];
+
+      // Lane label
+      const label = document.createElement('div');
+      label.className = 'lane-label visible';
+      label.style.left = '14px';
+      label.style.top = (yTop + 4) + 'px';
+      label.style.width = (W - 28) + 'px';
+      label.style.color = t.color;
+      label.innerHTML = `<i class="ti ${t.icon}" style="font-size:11px;color:${t.color}"></i>${t.label}`;
+      overlay.appendChild(label);
+
+      // Position cards in this lane
+      const typeCards = cards.filter(c => c.data.type === type && !c.el.classList.contains('filtered-out'));
+      typeCards.forEach((c, i) => {
+        const x = 14 + i * (cardW + colGap);
+        const y = yTop + 22;
+        c.el.style.left = x + 'px';
+        c.el.style.top  = y + 'px';
+      });
+    });
+    return;
+  }
+
+  if (arrangeMode === 'group') {
+    // 2×3 zones
+    const typeOrder = ['location','character','object','event','org','skeleton'];
+    const cols = 3, rows = 2;
+    const zoneW = Math.floor((W - 20) / cols);
+    const zoneH = Math.floor((H - 20) / rows);
+    const cardW = compactMode ? 160 : 192;
+    const cardH = compactMode ? 120 : 185;
+
+    typeOrder.forEach((type, ti) => {
+      if (!activeTypeFilters.has(type)) return;
+      const col = ti % cols, row = Math.floor(ti / cols);
+      const zoneX = 10 + col * zoneW;
+      const zoneY = 10 + row * zoneH;
+      const t = TYPE_META[type];
+
+      // Zone label
+      const label = document.createElement('div');
+      label.className = 'lane-label visible';
+      label.style.left = zoneX + 'px';
+      label.style.top  = (zoneY + 4) + 'px';
+      label.style.width = (zoneW - 10) + 'px';
+      label.style.color = t.color;
+      label.innerHTML = `<i class="ti ${t.icon}" style="font-size:11px;color:${t.color}"></i>${t.label}`;
+      overlay.appendChild(label);
+
+      const typeCards = cards.filter(c => c.data.type === type && !c.el.classList.contains('filtered-out'));
+      const perRow = Math.ceil(Math.sqrt(typeCards.length)) || 2;
+      typeCards.forEach((c, i) => {
+        const cx = zoneX + (i % perRow) * (cardW + 8);
+        const cy = zoneY + 24 + Math.floor(i / perRow) * (cardH + 8);
+        c.el.style.left = cx + 'px';
+        c.el.style.top  = cy + 'px';
+      });
+    });
+  }
+}
+
+// ── COMPACT MODE ──────────────────────────────────────────────────
+function toggleCompact() {
+  compactMode = !compactMode;
+  document.getElementById('density-label').textContent = compactMode ? 'Expand' : 'Compact';
+  document.getElementById('density-btn').classList.toggle('active', compactMode);
+  cards.forEach(({ el }) => el.classList.toggle('compact', compactMode));
+  if (arrangeMode !== 'free') applyArrange();
+}
+
+// ── SPAWN BLANK ───────────────────────────────────────────────────
+function spawnBlankCard() {
+  const wrap = document.getElementById('canvas-wrap');
+  const rect = wrap.getBoundingClientRect();
+  const types = Object.keys(TYPE_META);
+  const type = types[Math.floor(Math.random() * types.length)];
+  const id = cards.length;
+  const x = 40 + Math.random() * (rect.width - 240);
+  const y = 40 + Math.random() * (rect.height - 200);
+  freePositions[id] = { x, y };
+  createCard({ type, name: 'Untitled ' + TYPE_META[type].label, meta: 'No description yet.', canon: 'draft' }, id, x, y);
+  if (arrangeMode !== 'free') { arrangeMode = 'free'; ['free','lanes','group'].forEach(m => document.getElementById('arr-'+m).classList.toggle('active', m==='free')); }
+  applyFilters();
+  updateStatusBar();
+}
+
+function ctxAdd(type) {
+  const wrap = document.getElementById('canvas-wrap');
+  const rect = wrap.getBoundingClientRect();
+  const id = cards.length;
+  const x = ctxPos.x - rect.left;
+  const y = ctxPos.y - rect.top;
+  freePositions[id] = { x, y };
+  createCard({ type, name: 'Untitled ' + TYPE_META[type].label, meta: 'No description yet.', canon: 'draft' }, id, x, y);
+  applyFilters();
+  updateStatusBar();
+  hideCtxMenu();
+}
+
+// ── STATUS BAR ────────────────────────────────────────────────────
+function updateStatusBar() {
+  const total = cards.length;
+  const canon = cards.filter(c => c.data.canon === 'canon').length;
+  const draft = cards.filter(c => c.data.canon === 'draft').length;
+  const excl  = cards.filter(c => c.data.canon === 'excluded').length;
+  document.getElementById('sb-visible').textContent = total;
+  document.getElementById('sb-canon').textContent = canon;
+  document.getElementById('sb-draft').textContent = draft;
+  document.getElementById('sb-excl').textContent = excl;
+}
+
+// ── NAV ───────────────────────────────────────────────────────────
+function setActive(el) {
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── CTX MENU ──────────────────────────────────────────────────────
+function showCtxMenu(e) {
+  e.preventDefault();
+  ctxPos = { x: e.clientX, y: e.clientY };
+  const m = document.getElementById('ctx-menu');
+  m.style.left = e.clientX + 'px';
+  m.style.top  = e.clientY + 'px';
+  m.classList.add('visible');
+}
+function hideCtxMenu() { document.getElementById('ctx-menu').classList.remove('visible'); }
+document.addEventListener('click', hideCtxMenu);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') hideCtxMenu(); });
+
+// ── CONSOLE ───────────────────────────────────────────────────────
+const REPLIES = [
+  "The thinnest entities are Pern's Ledger and the Night Errand skeleton — both have descriptions but no linked characters or locations yet.",
+  "For Veldmere, a fence or broker character would suit — someone who moves things between the marsh settlements and the city proper. The floating bazaar setting suggests a character who knows many people and owes several of them.",
+  "For launch you still need: 1 more canon location, 4 more skeletons spanning the mariner and recovered correspondence registers, and a completed style fingerprint. The Greyworks needs a gazetteer image.",
+  "The Society and the Bone Slip are correctly excluded — they appear in the ledger as names but their nature is compartmentalized. You could add a third exclusion: the Within Wheels mechanism itself.",
+  "Cassiel Undre is currently unlinked to any skeleton. Her cartography work would suit the Recovered Letter shape — a map is a kind of document.",
+];
+let replyIdx = 0;
+function sendChip(btn) {
+  addMsg(btn.textContent, 'user');
+  setTimeout(() => addMsg(REPLIES[replyIdx++ % REPLIES.length], 'archivist'), 650);
+}
+function sendConsoleMsg() {
+  const inp = document.getElementById('console-input');
+  const v = inp.value.trim(); if (!v) return;
+  addMsg(v, 'user'); inp.value = '';
+  setTimeout(() => addMsg(REPLIES[replyIdx++ % REPLIES.length], 'archivist'), 700);
+}
+function addMsg(text, role) {
+  const msgs = document.getElementById('console-messages');
+  const div = document.createElement('div');
+  div.className = 'console-msg' + (role === 'user' ? ' user' : '');
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 
 // Include configuration and database connection if not already included
 if (!isset($mysqli)) {
-    require_once __DIR__ . "/config-api/config.php";
+    require_once __DIR__ . "/config-api.php";
 }
 
 function handleHealth() {
@@ -14,7 +14,7 @@ function handleHealth() {
         'status' => 'success',
         'message' => 'All systems operational',
         'data' => [
-            'version' => '1.0',a
+            'version' => '1.0',
             'timestamp' => time(),
             'checks' => [
                 'database' => [

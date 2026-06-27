@@ -15,7 +15,7 @@
         
         try {
             // Test the API endpoint that was failing
-            const response = await fetch('https://.'.APP_API_URL.'/api/diagnostic-cors.php', {
+            const response = await fetch('<?php echo defined('APP_API_URL') ? APP_API_URL : ''; ?>/diagnostic-cors.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
