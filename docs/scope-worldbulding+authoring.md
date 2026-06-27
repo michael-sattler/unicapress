@@ -79,15 +79,15 @@ The root container. *(A World is a canon container, not a manuscript-in-progress
 
 ### 5.3 Entity CRUD
 
-- **Characters** — name, meta, sketch, description, world role tag (protagonist/antagonist/npc/loveinterest, etc.), status (`proposed`/`canon`/`excluded`), imageprompt. Suggested attributes (gender, age, affiliations, speech register, physical markers, secrets)
-- **Locations** — name, meta, sketch, description, status (`proposed`/`canon`/`excluded`), imageprompt, starting_setting flag. Suggested attributes (climate, geography, sensory keys, local idiom, tech/era notes)
-- **Objects** — name, meta, sketch, description, status (`proposed`/`canon`/`excluded`), imageprompt, kind (artifact/technology/document/natural/other). Suggested attributes (material, origin, faction/org, capabilities, taboos)
-- **Organizations** — name, meta, sketch, description, status (`proposed`/`canon`/`excluded`), imageprompt. Suggested attributes (location, size, organizing principles)
-- **Themes** — name, meta, status (`proposed`/`canon`/`excluded`), imageprompt. Suggested attributes (how it manifests in this world, compatible registers)
+- **Characters** — name, meta, sketch, description, world role tag (protagonist/antagonist/npc/loveinterest, etc.), status (`proposed`/`canon`/`apocrypha`), imageprompt. Suggested attributes (gender, age, affiliations, speech register, physical markers, secrets)
+- **Locations** — name, meta, sketch, description, status (`proposed`/`canon`/`apocrypha`), imageprompt, starting_setting flag. Suggested attributes (climate, geography, sensory keys, local idiom, tech/era notes)
+- **Objects** — name, meta, sketch, description, status (`proposed`/`canon`/`apocrypha`), imageprompt, kind (artifact/technology/document/natural/other). Suggested attributes (material, origin, faction/org, capabilities, taboos)
+- **Organizations** — name, meta, sketch, description, status (`proposed`/`canon`/`apocrypha`), imageprompt. Suggested attributes (location, size, organizing principles)
+- **Themes** — name, meta, status (`proposed`/`canon`/`apocrypha`), imageprompt. Suggested attributes (how it manifests in this world, compatible registers)
 - **Attributes** — generic key-value extension on any entity above
 - **Relationships** — typed edges between any two entities
 
-**Status workflow:** every entity carries `status: proposed | canon | excluded`. An entity the worldbuilder creates directly is `canon` by default — no separate publish gate in Phase 1. An entity proposed by the LLM dialogue interchange (§5.4) lands as `proposed` and only becomes `canon` once the worldbuilder explicitly reviews and accepts it. `excluded` is reserved for canon material intentionally withheld from later generation use (Phase 3 concern; not exercised meaningfully until then).
+**Status workflow:** every entity carries `status: proposed | canon | apocrypha`. New entities start as `proposed` — whether the worldbuilder drafts them on the canvas or they arrive from a Telling. The worldbuilder then promotes an entity to `canon` or `apocrypha`, or deletes it outright. Delete is not offered for Telling-origin entities (only canon/apocrypha promotion). `apocrypha` is canon material intentionally withheld from later generation use (Phase 3 compartmentalization; A1.8).
 
 **Image prompt:** all entities carry `imageprompt` as a curated, reusable visual description distilled from (or alongside) the entity's `*_description`, used as consistent context across *every* image generated for that entity, so a character or location doesn't visually drift between separate generation calls. Worldbuilder-editable, not purely auto-derived.
 

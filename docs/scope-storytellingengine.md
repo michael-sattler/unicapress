@@ -1,5 +1,5 @@
-# UNICA PRESS
-## Product Requirements Document — v0.3 (Working Draft)
+# UNICA PRESS PHASE 3 STORYTELLING ENGINE
+## 
 
 **Product:** Unica Press — an engine that prepares unique, single-edition stories ("tellings") set in an authored world, delivered through an in-world reading experience.
 **Flagship world:** The Grand Archive of the Steamlands
@@ -15,14 +15,7 @@
 
 Unica Press is a publishing machine for worlds. A worldbuilder authors a universe — its canon, its story shapes, its voice — and the engine prepares **tellings**: stories generated once, for one reader, fixed permanently upon reading, and never produced again. The reader does not control the plot; the world tells the story. The product's unit of value is not "AI-generated content" but the **unicum** — an edition of one, with provenance, owned by the person it was prepared for.
 
-The first world is the Steamlands, presented as **The Grand Archive**: readers present a request slip to a Victorian difference engine, watch it retrieve their manuscript from the stacks, and read a story that exists for no one else.
-
-**Two-layer thesis (governs this document's structure):**
-
-- **The Engine (Feature Space A)** is the product's real value: a narrative generation system that produces coherent, canon-true, stylistically fingerprinted stories without per-story human editing. It is world-agnostic by design.
-- **The Experience (Feature Spaces B–E)** is the Steamlands-specific delivery vehicle: the Retrieval Engine interface, the manuscript reading surface, and the patron systems. It is replaceable skin over the engine — albeit skin that carries most of the brand.
-
-A build plan should treat these as separately schedulable workstreams with a thin contract between them (Section 8). See [workplan.md](./workplan.md).
+- **The Engine** is the product's real delivery mechanism: a narrative generation system that produces coherent, canon-true, stylistically fingerprinted stories without per-story human editing. It is world-agnostic by design.
 
 ---
 

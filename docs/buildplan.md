@@ -1,10 +1,11 @@
 # App Build Plan — Checklist
 
-**Status:** W1.3 shipped — entity CRUD next validation; W1.4 background LLM after gate  
+**Status:** W1.3 workbench UX shipped — **next: W1.6 Archivist dialogue** (W1.3 seed gate can run in parallel)  
 **Date:** June 2026  
 **Scope source:** [scope-worldbulding+authoring.md](./scope-worldbulding+authoring.md) (Phase 1, W1.0–W1.7)  
 **Entity reference:** [archive/V1-world-content-model.md](./archive/V1-world-content-model.md)  
-**Shell (parallel):** [scope-marketing-shell.md](./scope-marketing-shell.md) — PHP marketing/admin in this repo; App is separate stack
+**Shell (parallel):** [scope-marketing-shell.md](./scope-marketing-shell.md) — PHP marketing/admin in this repo; App is separate stack  
+**Workbench mockups:** [unica-workshop.html](./unica-workshop.html), [unica-workshop-populated.html](./unica-workshop-populated.html)
 
 ---
 
@@ -12,10 +13,12 @@
 
 You can stop after **W1.3** and call the App foundation done:
 
-- `docker compose up` starts the App `web` + `api` containers locally
+- `docker compose up` in `app/` starts the App `web` + `api` containers locally (project `unica-app`)
 - Supabase dev project connected; RLS enforced; one invited worldbuilder can log in
+- **Staff ops:** `/admin` — create worldbuilder accounts, browse a user's worlds, full entity CRUD (service role)
+- **Worldbuilder surface:** `/workbench` — workshop canvas, entity cards, slide-in entity editor, Archivist UI shell (mock replies until W1.6)
 - Create/edit/delete Worlds and all core entity types scoped to that account
-- No LLM, image gen, or rulesets required for this gate
+- No LLM meta/rename, rulesets, real dialogue, or image gen required for this gate
 
 Everything after W1.3 adds intelligence and polish on top of a working CRUD foundation.
 
@@ -35,7 +38,7 @@ Everything after W1.3 adds intelligence and polish on top of a working CRUD foun
   - World notes: single freeform field
   - Naming grammar: per-world only
   - Dialogue history: persist per-world, no expiry in v1
-  - One React app; engine-admin nav gated by role later
+  - One React app; **two surfaces:** staff `/admin` (ops CRUD) + worldbuilder `/workbench` (workshop UX); engine-admin nav gated by role later
 
 ---
 
@@ -56,7 +59,9 @@ Everything after W1.3 adds intelligence and polish on top of a working CRUD foun
 
 - [x] `profiles` — `id` (FK → auth.users), `role` (`worldbuilder`), `display_name`, timestamps
 - [x] `worlds` — `world_id`, `owner_id` → profiles, `world_title`, `world_logline`, `world_summary`, `world_notes`, `world_meta`, timestamps
-- [x] Entity tables (all include `world_id`, `owner_id`, `status`, `*_meta`, `*_sketch`, `*_description`, `imageprompt`, timestamps):
+- [x] Entity status enum: `proposed | canon | apocrypha` (migration `003_entity_status_apocrypha.sql` renames legacy `excluded`)
+- [x] Entity tables default `status = 'proposed'` on create
+- [x] Entity tables (all include `world_id`, `owner_id`, `status`, `*_meta`, `*_sketch`, `*_description`, `imageprompt`, timestamps; default `status = proposed`):
   - [x] `characters` (+ `world_role_tag`)
   - [x] `locations` (+ `starting_setting` boolean)
   - [x] `objects` (+ `kind`)
@@ -66,8 +71,8 @@ Everything after W1.3 adds intelligence and polish on top of a working CRUD foun
 - [x] `relationships` — typed edges (`from_entity_type/id`, `to_entity_type/id`, `relationship_type`)
 - [x] Deferred tables (add when milestone needs them):
   - `world_rulesets` (W1.5)
-  - `dialogue_messages` (W1.6)
   - `entity_images` (W1.7)
+- [x] `dialogue_messages` (W1.6 — migration `004`)
 
 ### Supabase — RLS (day one)
 
@@ -86,9 +91,11 @@ Everything after W1.3 adds intelligence and polish on top of a working CRUD foun
 
 ### Web foundation
 
-- [x] React Router shell: login, worlds list, world detail
+- [x] React Router: `/login`, `/admin/*` (staff ops), `/workbench` (worldbuilder workshop)
 - [x] Supabase client for auth session; API client for data (Bearer token)
-- [x] Apply [visual-style-guide.md](./visual-style-guide.md) tokens at CSS-variable level (paper/ink/oxblood) — functional UI first, polish later
+- [x] Admin API uses service role server-side; worldbuilder API uses RLS-scoped `/worlds` routes
+- [x] Apply [visual-style-guide.md](./visual-style-guide.md) tokens at CSS-variable level (paper/ink/oxblood) on admin/login surfaces
+- [x] Workshop UI uses separate dark theme + Tabler icons per workshop mockups (`workbench.css`)
 
 ### CI & hygiene
 
@@ -113,12 +120,17 @@ Everything after W1.3 adds intelligence and polish on top of a working CRUD foun
 
 ### UI shell
 
-- [x] App layout: top nav, worlds home
-- [x] Worlds list page (empty state + “Create world” CTA)
-- [x] User menu (email via session, logout)
 - [x] 404 / error boundary basics
+- [x] Dual surfaces documented: staff `/admin` vs worldbuilder `/workbench`
 
-**W1.1 exit gate:** [x] Invited worldbuilder logs in, sees empty dashboard, logs out cleanly.
+### Staff admin (`/admin`) — ops CRUD, not worldbuilder UX
+
+- [x] User list + create worldbuilder accounts (`POST /admin/users`, Supabase admin API)
+- [x] Per-user worlds list + create world for user
+- [x] World detail → entity type tabs, list/create/edit/delete (admin API prefix, service role)
+- [ ] Role gate: restrict `/admin` to staff/engine-admin (today any logged-in user)
+
+**W1.1 exit gate:** [x] Invited user logs in; staff can create accounts and open worlds; logout works.
 
 ---
 
@@ -132,9 +144,9 @@ Everything after W1.3 adds intelligence and polish on top of a working CRUD foun
 - [x] `GET/PATCH/DELETE /worlds/{id}` — read, update, delete
 - [x] Validate ownership on every world-scoped route (RLS + JWT)
 
-### UI
+### UI — admin (staff ops)
 
-- [x] Worlds list with title + logline snippet
+- [x] Worlds list with title + logline snippet (via user → worlds flow)
 - [x] Create world form: `world_title`, `world_logline`, `world_summary`, `world_notes`
 - [x] World detail/overview page showing all fields
 - [x] Edit + delete (delete confirms; **cascades** — removes all entities in world per DB FK)
@@ -154,12 +166,12 @@ Everything after W1.3 adds intelligence and polish on top of a working CRUD foun
 ### API — per entity type
 
 - [x] CRUD routes for characters, locations, objects, organizations, themes (all scoped by `world_id`)
-- [x] `POST` sets `status = 'canon'` for direct worldbuilder creates
-- [x] `PATCH` allows status transitions: `proposed` → `canon` | `excluded`
+- [x] `POST` sets `status = 'proposed'` for new entities (worldbuilder draft or future Telling)
+- [x] Status workflow: new entities → `proposed`; worldbuilder promotes to `canon` | `apocrypha` or deletes (Telling-origin: no delete — `origin` field when Tellings ship)
 - [x] Attributes: nested or sub-resource CRUD on any entity
 - [x] Relationships: create/list/delete typed edges between entities in same world
 
-### UI — per entity type
+### UI — admin (staff ops)
 
 - [x] World detail → entity type tabs (Characters, Locations, Objects, Organizations, Themes)
 - [x] List view with name, status badge, meta snippet
@@ -168,12 +180,45 @@ Everything after W1.3 adds intelligence and polish on top of a working CRUD foun
 - [x] Relationships picker (select target entity + relationship type)
 - [x] Filter or badge for `proposed` entities (for W1.6 preview)
 
+### UI — worldbuilder workshop (`/workbench`)
+
+Per [unica-workshop.html](./unica-workshop.html) / [unica-workshop-populated.html](./unica-workshop-populated.html).
+
+- [x] Full-screen workshop shell: left nav, canvas, right Archivist column
+- [x] Dot-grid canvas; empty state “getting started” overlay when no entities
+- [x] Entity cards on canvas when populated; drag positions persisted in `localStorage`
+- [x] Toolbar when populated: type/status filters, swim-lane/group arrange, compact cards, status bar
+- [x] Right-click context menu → create entity by type
+- [x] Collapsible left nav (icons-only + pin); resizable Archivist pane (200px–50vw)
+- [x] Entity detail panel: slides in from right as overlay (~58vw); thumbnail placeholder; full edit form + attributes + relationships
+- [x] Incremental state on save/create/delete (no full-page reload)
+- [x] Archivist UI shell: chips + input + canned replies (**wired to `/dialogue` API in W1.6**)
+- [ ] World switcher when user owns multiple worlds (today: first world or `/workbench/:worldId`)
+- [ ] Card edit pencil → same panel (done); card click / double-click behaviors TBD
+- [ ] Canvas card positions stored server-side (today: `localStorage` only)
+
 ### Validation
 
 - [x] Required fields enforced (at minimum: name per entity)
 - [x] Relationship endpoints reject cross-world links
 
-**W1.3 exit gate:** [ ] Populate a Steamlands seed world with at least one of each entity type, attributes, and two relationships; data survives reload; tenant isolation still holds.
+**W1.3 exit gate:** [ ] Populate a Steamlands seed world with at least one of each entity type, attributes, and two relationships; data survives reload; tenant isolation still holds; verify in both `/admin` and `/workbench`.
+
+---
+
+## What’s next (recommended order)
+
+| Priority | Milestone | Why now |
+|---|---|---|
+| **1** | **W1.6 Dialogue** | Archivist shell is built; wire it to real LLM + persistence — highest user-visible value |
+| **2** | **W1.3 exit gate** | Seed Steamlands; proves data model before layering more intelligence |
+| **3** | **W1.4 Background LLM** | `summarizeEntity` + `rename` — auto-fills `*_meta`; independent of dialogue |
+| **4** | **W1.5 Rulesets** | Naming/collision rules enrich Archivist context (can stub empty until then) |
+| **5** | **W1.7 Images** | Thumbnail placeholder → real gallery + OpenAI gen |
+
+**Workbench polish (can interleave):** world switcher, server-persisted canvas layout, admin role gate, engine-admin surface.
+
+**W1.6 does not require W1.4 or W1.5** — start with world + entity + relationship context; add rulesets to the prompt when W1.5 lands.
 
 ---
 
@@ -214,25 +259,61 @@ Everything after W1.3 adds intelligence and polish on top of a working CRUD foun
 
 ## W1.6 — LLM dialogue interchange
 
-**Goal:** World/entity-scoped assistant per scope §5.4.
+**Goal:** World/entity-scoped assistant per scope §5.4. Replace `ArchivistConsole` mock replies with persisted, grounded dialogue.
 
-### Schema & API
+**Existing UI to wire:** `ArchivistConsole.tsx` + `archivist.ts` (mock); workbench already has world + entity list + detail panel for accept/reject flows.
 
-- [ ] `dialogue_messages` — `world_id`, optional entity reference, role, content, structured_payload JSON, timestamps
-- [ ] `POST /worlds/{id}/dialogue` — send message; stream or poll response
-- [ ] Context assembly: current entity + related entities via relationships + world rulesets
-- [ ] Structured outputs:
-  - [ ] Field-level suggestions → `*_proposed` accept/reject in UI
-  - [ ] Whole-entity JSON → review modal → create as `proposed` entity
+### Slice A — Chat persistence + API (do first)
 
-### UI
+- [x] Migration `004_dialogue_messages.sql`:
+  - `message_id`, `world_id`, `owner_id`
+  - optional `entity_type`, `entity_id` (scope anchor when entity detail panel is open)
+  - `role` (`user` | `assistant`)
+  - `content` (text)
+  - `structured_payload` (jsonb, nullable — proposals parsed from assistant turn)
+  - `created_at`
+- [x] RLS: same owner/world pattern as entities
+- [x] `GET /worlds/{id}/dialogue` — list messages (newest last or paginated)
+- [x] `POST /worlds/{id}/dialogue` — body: `{ content, entity_type?, entity_id? }`; returns assistant message
+- [x] FastAPI `anthropic` client module (keys server-only; `ANTHROPIC_API_KEY` already in env example)
+- [x] Context assembly for system prompt:
+  - world: title, logline, summary, notes
+  - if entity scoped: entity fields + attributes + relationships (both directions)
+  - compact entity index (name, type, status) for grounding
+  - rulesets: empty stub until W1.5
+- [x] Persist user + assistant turns to `dialogue_messages`
 
-- [ ] Chat panel on world overview and entity edit screens
-- [ ] Accept/reject for field suggestions
-- [ ] “Create entity from suggestion” flow for whole-entity JSON
-- [ ] Conversation history loads per world on return visit
+### Slice B — Wire workbench Archivist
 
-**W1.6 exit gate:** Brainstorm a new character in chat; accept JSON proposal; entity appears as `proposed`; promote to `canon`.
+- [x] Pass `worldId`, auth token, optional `selectedEntityId` / entity type into `ArchivistConsole`
+- [x] Load history on mount; append on send; loading/error states
+- [x] Replace `nextArchivistReply` / `setTimeout` mock with `POST /dialogue`
+- [x] Chips send real prompts (keep current chip labels)
+- [x] v1: non-streaming response is fine; add SSE streaming later if latency feels bad
+
+### Slice C — Whole-entity proposals (exit-gate core)
+
+- [x] Assistant system prompt: may emit a fenced JSON block with `type: "entity_proposal"` — entity_type, name, sketch, description, type-specific fields
+- [x] API parses JSON from assistant content → store in `structured_payload` on that message
+- [x] Chat UI: proposal card on assistant messages with **Review** / **Dismiss**
+- [x] Review modal: editable preview → **Create as proposed** calls existing entity `POST` (`status: proposed`)
+- [x] On create: refresh canvas; user promotes to canon via existing detail panel
+
+### Slice D — Field-level suggestions (stretch / follow-up)
+
+- [x] Assistant may emit `type: "field_suggestions"` with `{ field, proposed_value, rationale }[]`
+- [x] When entity detail panel is open: show inline accept/reject per field (no `*_proposed` DB columns in v1 — apply via PATCH on accept)
+- [ ] Optional: surface “Apply to open entity” from chat when scoped to that entity
+
+### Deferred within W1.6
+
+- Admin `/admin` chat panel (workbench-only for v1)
+- SSE streaming
+- Configurable Scribe persona (scope §4)
+- Conversation summarization / expiry
+- Semantic search over past conversations
+
+**W1.6 exit gate:** Brainstorm a new character in Archivist chat; assistant returns entity JSON; accept → entity appears on canvas as `proposed`; open detail panel → promote to `canon`. Conversation history reloads on return visit.
 
 ---
 
@@ -249,7 +330,8 @@ Everything after W1.3 adds intelligence and polish on top of a working CRUD foun
 
 ### UI
 
-- [ ] `imageprompt` field on entity forms (editable, separate from description)
+- [ ] `imageprompt` field on entity forms (editable, separate from description) — *workbench + admin forms have field; generation UI pending*
+- [ ] **Workbench:** replace thumbnail placeholder with generated image
 - [ ] “Generate image” button + loading state
 - [ ] Gallery per entity (thumbnail grid, lightbox optional)
 
@@ -289,20 +371,23 @@ Reader-facing storytelling engine — [scope-storytellingengine.md](./scope-stor
 ## Suggested build order (at a glance)
 
 ```
-W1.0 Scaffold ──► W1.1 Auth/shell ──► W1.2 Worlds ──► W1.3 Entities
-                                                      │
-                        ┌─────────────────────────────┘
+W1.0 Scaffold ──► W1.1 Auth + admin ops ──► W1.2 Worlds ──► W1.3 Entities + workbench UX
+                                                              │
+                        ┌─────────────────────────────────────┘
                         ▼
-              W1.4 Background LLM ──► W1.5 Rulesets ──► W1.6 Dialogue ──► W1.7 Images
+              W1.3 exit gate (seed world) ── parallel ──► W1.6 Dialogue (Archivist)
+                        │
+                        ▼
+              W1.4 Background LLM ──► W1.5 Rulesets ──► W1.7 Images
 ```
 
-**Current sprint:** W1.3 exit gate — seed one world with all entity types; then W1.4.  
-**Intelligence layer:** W1.4 → W1.7 in order (each depends on stable entity data).
+**Current sprint:** W1.6 exit gate — run migration `004`, set `ANTHROPIC_API_KEY`, test entity proposal flow end-to-end.
 
 ---
 
 ## Notes
 
-- **Shell vs App:** Do not add worldbuilder routes to `public/app/admin/`. Staff admin stays PHP; worldbuilder stays React.
+- **Shell vs App:** Do not add worldbuilder routes to `public/app/admin/`. Staff admin stays PHP; worldbuilder stays React (`/workbench`).
+- **Admin vs workbench:** `/admin` = staff ops CRUD (service role). `/workbench` = worldbuilder workshop (RLS). Same entity API shapes; different prefixes and UX.
 - **Filename typo:** scope doc is `scope-worldbulding+authoring.md` until renamed.
 - **Check off items** by changing `[ ]` → `[x]` as you go; add dates or PR links inline if helpful.
