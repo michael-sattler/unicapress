@@ -15,6 +15,9 @@ if (!function_exists('is_current_route')) {
         $current = parse_url($request_uri, PHP_URL_PATH) ?: '/';
         $current = rtrim($current, '/') ?: '/';
         $path = rtrim($path, '/') ?: '/';
+        if ($path === '/worldbuilder' && $current === '/worldbuilding') {
+            return true;
+        }
         return $current === $path;
     }
 }

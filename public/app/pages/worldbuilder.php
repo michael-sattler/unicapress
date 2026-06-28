@@ -9,7 +9,7 @@ ob_start();
 ?>
 <div class="page-header text-center">
     <div class="container container-narrow">
-        <span class="eyebrow">Worldbuilding</span>
+        <span class="eyebrow">Worldbuilder</span>
         <img src="/app/assets/images/icon_world.png" alt="Unica Press" class="img-fluid mb-3" style="max-height: 150px;">
         <h1>Tools to build worlds</h1>
         <p class="lead text-muted mb-0">

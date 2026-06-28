@@ -10,7 +10,8 @@ return [
     '/about' => 'app/pages/about.php',
     '/contact' => 'app/pages/contact.php',
     '/about-the-engine' => 'app/pages/colophon.php',
-    '/worldbuilding' => 'app/pages/worldbuilding.php',
+    '/worldbuilder' => 'app/pages/worldbuilder.php',
+    '/worldbuilding' => 'app/pages/worldbuilder.php', // legacy alias
 
     '/admin' => 'app/admin/index.php',
     '/admin/login' => 'app/admin/adminlogin.php',
