@@ -193,7 +193,7 @@ ob_start();
                     beside the rest of your canon, and watch the connections between them surface on their
                     own as the world fills in &ndash; nothing is fixed until you say it is.
                 </p>
-                <a href="https://worldbuilding.unica.press" class="btn btn-wb-accent">
+                <a href="https://worldbuilder.unicapress.com" class="btn btn-wb-accent">
                     Open the workbench <i class="ti ti-arrow-right ms-1"></i>
                 </a>
             </div>
