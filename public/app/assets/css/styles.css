@@ -208,6 +208,121 @@ h1, h2, h3, h4, .site-brand, .hero-title {
     padding: 4.5rem 0 3.5rem;
 }
 
+/* ---------------------------------------------------------------
+   Workbench promo stripe — borrows the dark canvas palette from
+   the worldbuilding workbench (app/web/src/workbench/workbench.css)
+   --------------------------------------------------------------- */
+.stripe-workbench {
+    --wbp-bg: #111110;
+    --wbp-surface-1: #1a1917;
+    --wbp-surface-2: #222120;
+    --wbp-border: rgba(255, 255, 255, 0.08);
+    --wbp-border-strong: rgba(255, 255, 255, 0.15);
+    --wbp-text-primary: #e8e4dc;
+    --wbp-text-muted: #9e9a92;
+    --wbp-accent: #c8b88a;
+    --wbp-accent-dim: rgba(200, 184, 138, 0.12);
+    --wbp-accent-border: rgba(200, 184, 138, 0.3);
+    background-color: var(--wbp-bg);
+    color: var(--wbp-text-primary);
+}
+
+.stripe-workbench .eyebrow {
+    color: var(--wbp-accent);
+}
+
+.stripe-workbench p {
+    color: var(--wbp-text-primary);
+}
+
+.stripe-workbench .text-muted {
+    color: var(--wbp-text-muted) !important;
+}
+
+.wb-promo-canvas {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    background-color: var(--wbp-surface-1);
+    border: 1px solid var(--wbp-border);
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 22px 22px;
+}
+
+.wb-promo-card {
+    position: relative;
+    padding: 0.9rem 1rem;
+    border-radius: 0.6rem;
+    background-color: var(--wbp-surface-2);
+    border: 1px solid var(--wbp-border);
+    overflow: hidden;
+}
+
+.wb-promo-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--type-color, transparent);
+    opacity: 0.7;
+}
+
+.wb-promo-card-type {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--type-color, var(--wbp-text-muted));
+    margin-bottom: 0.4rem;
+}
+
+.wb-promo-card-name {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 1.05rem;
+    color: var(--wbp-text-primary);
+    margin-bottom: 0.55rem;
+    line-height: 1.3;
+}
+
+.wb-promo-card-canon {
+    display: inline-block;
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+    padding: 0.1rem 0.5rem;
+    border-radius: 10px;
+}
+
+.wb-promo-card-canon.canon {
+    background: var(--wbp-accent-dim);
+    color: var(--wbp-accent);
+    border: 1px solid var(--wbp-accent-border);
+}
+
+.wb-promo-card-canon.draft {
+    background: var(--wbp-surface-1);
+    color: var(--wbp-text-muted);
+    border: 1px solid var(--wbp-border-strong);
+}
+
+@media (max-width: 575.98px) {
+    .wb-promo-canvas {
+        grid-template-columns: 1fr;
+    }
+}
+
+.btn-wb-accent {
+    --bs-btn-color: #15140f;
+    --bs-btn-bg: #c8b88a;
+    --bs-btn-border-color: #c8b88a;
+    --bs-btn-hover-bg: #d8caa0;
+    --bs-btn-hover-border-color: #d8caa0;
+    --bs-btn-active-bg: #d8caa0;
+    --bs-btn-active-border-color: #d8caa0;
+}
+
 .hero-title {
     font-size: clamp(2.5rem, 5vw, 3.75rem);
     line-height: 1.1;

@@ -170,8 +170,63 @@ ob_start();
     </div>
 </section>
 
+<!-- ========================= WORKBENCH / WORLDBUILDER PROMOTION =========================== -->
+<section class="stripe stripe-workbench">
+    <div class="container py-3">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-6">
+                <span class="eyebrow">Introducing the Unica Press Workbench</span>
+                <h2 class="mb-3">A place  for everything in your head to finally live</h2>
+                <p class="mb-3">
+                    Most of a world never makes it past a notebook margin or a half-finished doc &ndash;
+                    a face you can picture but haven't named, a place you've never described, a thread you
+                    keep meaning to follow. The Unica Press Workbench is a canvas built to hold all of it at once:
+                    every place, person, object, and idea you imagine, set down the moment you think of it
+                    and linked to everything it touches.
+                </p>
+                <p class="text-muted mb-4">
+                    Your Workbench is the foundation for everything that comes after: the stories, the reference bibles, the AI context, the brainstorming. If it's all captured, you can build anything.
+                </p>
+
+                <p class="text-muted mb-4 d-none">
+                    Nothing has to be finished to belong here. Drop a thought down as a draft, let it sit
+                    beside the rest of your canon, and watch the connections between them surface on their
+                    own as the world fills in &ndash; nothing is fixed until you say it is.
+                </p>
+                <a href="https://worldbuilding.unica.press" class="btn btn-wb-accent">
+                    Open the workbench <i class="ti ti-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="col-lg-6">
+                <div class="wb-promo-canvas">
+                    <div class="wb-promo-card" style="--type-color:#6b9fb8;">
+                        <div class="wb-promo-card-type"><i class="ti ti-map-pin"></i> Location</div>
+                        <div class="wb-promo-card-name">The Salt Quarter</div>
+                        <div class="wb-promo-card-canon canon">Canon</div>
+                    </div>
+                    <div class="wb-promo-card" style="--type-color:#a87caa;">
+                        <div class="wb-promo-card-type"><i class="ti ti-user"></i> Character</div>
+                        <div class="wb-promo-card-name">Imeril Voss</div>
+                        <div class="wb-promo-card-canon canon">Canon</div>
+                    </div>
+                    <div class="wb-promo-card" style="--type-color:#b8936b;">
+                        <div class="wb-promo-card-type"><i class="ti ti-box"></i> Object</div>
+                        <div class="wb-promo-card-name">The Brass Ledger</div>
+                        <div class="wb-promo-card-canon draft">Draft</div>
+                    </div>
+                    <div class="wb-promo-card" style="--type-color:#8c9eb8;">
+                        <div class="wb-promo-card-type"><i class="ti ti-feather"></i> Theme</div>
+                        <div class="wb-promo-card-name">Debts that outlive their debtors</div>
+                        <div class="wb-promo-card-canon canon">Canon</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- ========================= FLAGSHIP WORLD =========================== -->
-<section class="stripe stripe-deep">
+<section class="stripe stripe-deep d-none">
     <div class="container py-3">
         <div class="row align-items-center gy-4">
             <div class="col-lg-7">
